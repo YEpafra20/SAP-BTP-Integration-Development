@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAP BTP Integration Development</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="#/README.md">SAP BTP Integration Development</a>
+      <nav class="top-actions" aria-label="Page controls">
+        <a class="home-button" href="#/README.md" title="Go to home">Home</a>
+        <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
+      </nav>
+    </header>
+    <aside class="sidebar" aria-label="Guide navigation">
+      <div class="sidebar-title">Beginner Guide</div>
+      <a href="#/README.md">Role Overview</a>
+      <a class="community-link" href="https://chat.whatsapp.com/Kq94bB5oytU7X2qaDhHNny" target="_blank" rel="noopener noreferrer">Join WhatsApp Community</a>
+    </aside>
+    <main id="main-content" class="content"></main>
+  </div>
+  <div class="welcome-overlay" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <section class="welcome-dialog">
+      <p class="welcome-label">Community learning resource</p>
+      <h1 id="welcome-title">Welcome to the SAP BTP Integration Development</h1>
+      <p>This page is not an official SAP or Accenture website. It was created to help the community understand concepts related to the allocated role.</p>
+      <p>The page is available until onboarding. The owner may add learning-plan updates, role-related resources, and other helpful information. Content may be updated automatically as new learning notes are published.</p>
+      <button class="agree-button" type="button">Agree and continue</button>
+    </section>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const content = document.getElementById('main-content');
+    const menuButton = document.querySelector('.menu-button');
+    const sidebar = document.querySelector('.sidebar');
+    const welcomeOverlay = document.querySelector('.welcome-overlay');
+    const agreeButton = document.querySelector('.agree-button');
+
+    async function renderReadme() {
+      const response = await fetch('README.md');
+      const markdown = await response.text();
+      content.innerHTML = marked.parse(markdown);
+    }
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = sidebar.classList.toggle('is-open');
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    sidebar.addEventListener('click', (event) => {
+      if (event.target.matches('a')) {
+        sidebar.classList.remove('is-open');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    agreeButton.addEventListener('click', () => {
+      welcomeOverlay.classList.add('is-dismissed');
+      document.body.classList.remove('welcome-locked');
+    });
+
+    document.body.classList.add('welcome-locked');
+
+    renderReadme();
+  </script>
+</body>
+</html>
