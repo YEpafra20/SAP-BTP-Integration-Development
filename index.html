@@ -12,12 +12,16 @@
       <a class="brand" href="#/README.md">SAP BTP Integration Development</a>
       <nav class="top-actions" aria-label="Page controls">
         <a class="home-button" href="#/README.md" title="Go to home">Home</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+          <span class="theme-toggle-label">Light</span>
+        </button>
         <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
       </nav>
     </header>
     <aside class="sidebar" aria-label="Guide navigation">
-      <div class="sidebar-title">Beginner Guide</div>
-      <a href="#/README.md">Role Overview</a>
+      <div class="sidebar-title">Learning Paths</div>
+      <a class="nav-button" href="#stream-guide">Stream Guide</a>
+      <a class="nav-button" href="#stream-course">Stream Course</a>
       <a class="community-link" href="https://chat.whatsapp.com/Bgff8re9UIQK4b1Z1ij0U6" target="_blank"
         rel="noopener noreferrer">Join WhatsApp Community</a>
     </aside>
@@ -40,11 +44,27 @@
     const sidebar = document.querySelector('.sidebar');
     const welcomeOverlay = document.querySelector('.welcome-overlay');
     const agreeButton = document.querySelector('.agree-button');
+      const themeToggle = document.getElementById('theme-toggle');
+
+      function applyTheme(theme) {
+        const isDark = theme === 'dark';
+        document.body.dataset.theme = theme;
+        localStorage.setItem('sap-btp-theme', theme);
+        themeToggle.setAttribute('aria-pressed', String(isDark));
+        themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        themeToggle.querySelector('.theme-toggle-label').textContent = isDark ? 'Dark' : 'Light';
+      }
 
     async function renderReadme() {
       const response = await fetch('README.md');
       const markdown = await response.text();
       content.innerHTML = marked.parse(markdown);
+
+      const hash = window.location.hash || '#stream-guide';
+      const target = document.querySelector(hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     menuButton.addEventListener('click', () => {
@@ -64,7 +84,14 @@
       document.body.classList.remove('welcome-locked');
     });
 
+      themeToggle.addEventListener('click', () => {
+        const nextTheme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme);
+      });
+
     document.body.classList.add('welcome-locked');
+      const savedTheme = localStorage.getItem('sap-btp-theme') || 'light';
+      applyTheme(savedTheme);
 
     renderReadme();
   </script>
