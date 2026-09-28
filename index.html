@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAP BTP Integration Development</title>
+  <link rel="icon" type="image/png" href="sap.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -25,7 +26,7 @@
       <div class="sidebar-title day-nav-title">Day Wise Resources</div>
       <a class="nav-button nav-subitem" href="#day-1">Day 1 · Module 1</a>
       <a class="community-link" href="https://chat.whatsapp.com/Bgff8re9UIQK4b1Z1ij0U6" target="_blank"
-        rel="noopener noreferrer">Join WhatsApp Community</a>
+        rel="noopener noreferrer">Get updates on WhatsApp</a>
     </aside>
     <main id="main-content" class="content"></main>
   </div>
@@ -60,8 +61,44 @@
     const contentPages = {
       '#stream-guide': { file: 'stream-guide.md', title: 'Stream Guide' },
       '#stream-details': { file: 'stream-details.md', title: 'Stream Details' },
-      '#day-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: Module 1', imageDirectory: 'day-wise/day-1/images/' }
+      '#day-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: Module 1', imageDirectory: 'day-wise/day-1/images/', isModule: true }
     };
+
+    function addModuleCheckIn(page, route) {
+      if (!page.isModule) return;
+
+      const moduleId = route.slice(1);
+      const completionKey = `sap-btp-completed-${moduleId}`;
+      const checkIn = document.createElement('section');
+      checkIn.className = 'module-checkin';
+      checkIn.setAttribute('aria-labelledby', 'module-checkin-title');
+      checkIn.innerHTML = `
+        <div class="module-checkin-copy">
+          <p class="checkin-kicker">Module progress</p>
+          <h2 id="module-checkin-title">Mark this module complete</h2>
+          <p>Progress is saved only in this browser. Shared feedback voting is not connected yet.</p>
+        </div>
+        <div class="module-checkin-actions">
+          <button class="completion-button" type="button" aria-pressed="false">Mark complete</button>
+          <p class="completion-status checkin-status" aria-live="polite"></p>
+        </div>`;
+      content.append(checkIn);
+
+      const completionButton = checkIn.querySelector('.completion-button');
+      const completionStatus = checkIn.querySelector('.completion-status');
+      const isComplete = localStorage.getItem(completionKey) === 'true';
+      completionButton.setAttribute('aria-pressed', String(isComplete));
+      completionButton.textContent = isComplete ? 'Completed' : 'Mark complete';
+      completionButton.addEventListener('click', () => {
+        const nextComplete = completionButton.getAttribute('aria-pressed') !== 'true';
+        localStorage.setItem(completionKey, String(nextComplete));
+        completionButton.setAttribute('aria-pressed', String(nextComplete));
+        completionButton.textContent = nextComplete ? 'Completed' : 'Mark complete';
+        completionStatus.textContent = nextComplete
+          ? 'Module progress saved on this device.'
+          : 'Module marked as not complete.';
+      });
+    }
 
     async function renderPage() {
       const [route, anchorId] = (window.location.hash || '#stream-guide').split('/');
@@ -77,6 +114,7 @@
         content.innerHTML = page.imageDirectory
           ? renderedContent.replace(/(src=["'])images\//g, `$1${page.imageDirectory}`)
           : renderedContent;
+        addModuleCheckIn(page, route);
         const anchor = anchorId && document.getElementById(decodeURIComponent(anchorId));
         if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
         else window.scrollTo(0, 0);
