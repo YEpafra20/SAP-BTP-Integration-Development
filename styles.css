@@ -162,6 +162,14 @@ body.welcome-locked { overflow: hidden; }
   background: #147849;
 }
 
+.sidebar .contribute-link {
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  color: var(--blue-dark);
+  text-align: center;
+  font-size: 0.84rem;
+}
+
 .welcome-overlay {
   position: fixed;
   inset: 0;
