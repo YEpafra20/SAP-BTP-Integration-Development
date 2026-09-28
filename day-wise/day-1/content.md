@@ -3,8 +3,6 @@
 **Date:** 28 September 2026  
 **Status:** Trainer Module 1 completed
 
-Add Day 1 screenshots to this folder's `images/` directory. Image links below use the image number from the course notes and a descriptive filename; keep the exact filename when you add each image.
-
 ## Contents
 
 - [What is SAP?](#day-1/what-is-sap)
