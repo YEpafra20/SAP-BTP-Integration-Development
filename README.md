@@ -1,3 +1,5 @@
+> Editable website content is now maintained in [stream-guide.md](stream-guide.md), [stream-details.md](stream-details.md), and [day-wise/day-1/content.md](day-wise/day-1/content.md). Add Day 1 images in `day-wise/day-1/images/` using the filenames shown in the Day 1 file. The content below is the original guide snapshot.
+
 <div class="landing-hero">
   <div class="hero-copy">
     <span class="eyebrow">SAP BTP Integration Development</span>
