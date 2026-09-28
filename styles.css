@@ -162,6 +162,14 @@ body.welcome-locked { overflow: hidden; }
   background: #147849;
 }
 
+.sidebar .contribute-link {
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  color: var(--blue-dark);
+  text-align: center;
+  font-size: 0.84rem;
+}
+
 .welcome-overlay {
   position: fixed;
   inset: 0;
@@ -327,6 +335,37 @@ body.welcome-locked { overflow: hidden; }
 
 .content img:not([src*='data:']) { color: var(--muted); }
 .content hr { margin: 54px 0; border: 0; border-top: 1px solid var(--line); }
+
+.module-checkin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin: 64px 0 20px;
+  padding: 26px 0;
+  border-top: 2px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.module-checkin-copy { min-width: 0; }
+.checkin-kicker { margin: 0 0 5px; color: var(--pink) !important; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+.content .module-checkin h2 { margin: 0 0 7px; padding: 0; border: 0; color: var(--ink); font-size: 1.3rem; }
+.module-checkin-copy > p:not(.checkin-kicker) { margin: 0 0 7px; color: var(--muted); font-size: 0.86rem; }
+.module-checkin-copy a { font-size: 0.86rem; }
+.module-checkin-actions { display: grid; justify-items: start; gap: 9px; flex: 0 0 auto; }
+.completion-button {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--ink);
+  background: var(--card-bg);
+  font: 600 0.84rem 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+.completion-button[aria-pressed='true'] { border-color: var(--blue-dark); color: white; background: var(--blue-dark); }
+.completion-button:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+.checkin-status { min-height: 1.4em; margin: 0; color: var(--muted); font-size: 0.76rem; }
 
 .content.day-resources-view {
   max-width: 1400px;
@@ -531,6 +570,8 @@ body.welcome-locked { overflow: hidden; }
   .resource-detail-heading { display: block; }
   .resource-detail-heading h2 { margin-top: 0; font-size: 1.5rem; }
   .resource-external { display: inline-block; margin-top: 14px; }
+  .module-checkin { align-items: flex-start; flex-direction: column; gap: 18px; margin-top: 46px; }
+  .module-checkin-actions { width: 100%; }
     .home-button,
     .menu-button,
     .theme-toggle {
