@@ -9,9 +9,9 @@
 <body>
   <div class="site-shell">
     <header class="topbar">
-      <a class="brand" href="#/README.md">SAP BTP Integration Development</a>
+      <a class="brand" href="#stream-guide">SAP BTP Integration Development</a>
       <nav class="top-actions" aria-label="Page controls">
-        <a class="home-button" href="#/README.md" title="Go to home">Home</a>
+        <a class="home-button" href="#stream-guide" title="Go to stream guide">Home</a>
         <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
           <span class="theme-toggle-label">Light</span>
         </button>
@@ -21,7 +21,9 @@
     <aside class="sidebar" aria-label="Guide navigation">
       <div class="sidebar-title">Learning Paths</div>
       <a class="nav-button" href="#stream-guide">Stream Guide</a>
-      <a class="nav-button" href="#stream-course">Stream Course</a>
+      <a class="nav-button" href="#stream-details">Stream Details</a>
+      <div class="sidebar-title day-nav-title">Day Wise Resources</div>
+      <a class="nav-button nav-subitem" href="#day-1">Day 1 · Module 1</a>
       <a class="community-link" href="https://chat.whatsapp.com/Bgff8re9UIQK4b1Z1ij0U6" target="_blank"
         rel="noopener noreferrer">Join WhatsApp Community</a>
     </aside>
@@ -44,28 +46,46 @@
     const sidebar = document.querySelector('.sidebar');
     const welcomeOverlay = document.querySelector('.welcome-overlay');
     const agreeButton = document.querySelector('.agree-button');
-      const themeToggle = document.getElementById('theme-toggle');
+    const themeToggle = document.getElementById('theme-toggle');
 
-      function applyTheme(theme) {
-        const isDark = theme === 'dark';
-        document.body.dataset.theme = theme;
-        localStorage.setItem('sap-btp-theme', theme);
-        themeToggle.setAttribute('aria-pressed', String(isDark));
-        themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-        themeToggle.querySelector('.theme-toggle-label').textContent = isDark ? 'Dark' : 'Light';
-      }
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+      document.body.dataset.theme = theme;
+      localStorage.setItem('sap-btp-theme', theme);
+      themeToggle.setAttribute('aria-pressed', String(isDark));
+      themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      themeToggle.querySelector('.theme-toggle-label').textContent = isDark ? 'Dark' : 'Light';
+    }
 
-    async function renderReadme() {
-      const response = await fetch('README.md');
-      const markdown = await response.text();
-      content.innerHTML = marked.parse(markdown);
+    const contentPages = {
+      '#stream-guide': { file: 'stream-guide.md', title: 'Stream Guide' },
+      '#stream-details': { file: 'stream-details.md', title: 'Stream Details' },
+      '#day-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: Module 1', imageDirectory: 'day-wise/day-1/images/' }
+    };
 
-      const hash = window.location.hash || '#stream-guide';
-      const target = document.querySelector(hash);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    async function renderPage() {
+      const [route, anchorId] = (window.location.hash || '#stream-guide').split('/');
+      const page = contentPages[route] || contentPages['#stream-guide'];
+      document.title = `${page.title} | SAP BTP Integration Development`;
+      content.innerHTML = '<p>Loading resources...</p>';
+
+      try {
+        const response = await fetch(page.file);
+        if (!response.ok) throw new Error(`Could not load ${page.file}`);
+        const markdown = await response.text();
+        const renderedContent = marked.parse(markdown);
+        content.innerHTML = page.imageDirectory
+          ? renderedContent.replace(/(src=["'])images\//g, `$1${page.imageDirectory}`)
+          : renderedContent;
+        const anchor = anchorId && document.getElementById(decodeURIComponent(anchorId));
+        if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        else window.scrollTo(0, 0);
+      } catch (error) {
+        content.innerHTML = `<h1>Unable to load this page</h1><p>${error.message}</p>`;
       }
     }
+
+    window.addEventListener('hashchange', renderPage);
 
     menuButton.addEventListener('click', () => {
       const isOpen = sidebar.classList.toggle('is-open');
@@ -84,16 +104,16 @@
       document.body.classList.remove('welcome-locked');
     });
 
-      themeToggle.addEventListener('click', () => {
-        const nextTheme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
-        applyTheme(nextTheme);
-      });
+    themeToggle.addEventListener('click', () => {
+      const nextTheme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme);
+    });
 
     document.body.classList.add('welcome-locked');
-      const savedTheme = localStorage.getItem('sap-btp-theme') || 'light';
-      applyTheme(savedTheme);
+    const savedTheme = localStorage.getItem('sap-btp-theme') || 'light';
+    applyTheme(savedTheme);
 
-    renderReadme();
+    renderPage();
   </script>
 </body>
 </html>
