@@ -21,6 +21,7 @@
     </header>
     <aside class="sidebar" aria-label="Guide navigation">
       <div class="sidebar-title">Learning Paths</div>
+      <a class="nav-button" href="#stream-map">Stream Map</a>
       <a class="nav-button" href="#stream-guide">Stream Guide</a>
       <a class="nav-button" href="#stream-details">Stream Details</a>
       <div class="sidebar-title day-nav-title">Day Wise Resources</div>
@@ -41,6 +42,7 @@
     </section>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="stream-map.js"></script>
   <script>
     const content = document.getElementById('main-content');
     const menuButton = document.querySelector('.menu-button');
@@ -59,6 +61,7 @@
     }
 
     const contentPages = {
+      '#stream-map': { title: 'Stream Map', isStreamMap: true },
       '#stream-guide': { file: 'stream-guide.md', title: 'Stream Guide' },
       '#stream-details': { file: 'stream-details.md', title: 'Stream Details' },
       '#day-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: Module 1', imageDirectory: 'day-wise/day-1/images/', isModule: true }
@@ -105,8 +108,15 @@
       const page = contentPages[route] || contentPages['#stream-guide'];
       document.title = `${page.title} | SAP BTP Integration Development`;
       content.innerHTML = '<p>Loading resources...</p>';
+      content.classList.remove('stream-map-view');
 
       try {
+        if (page.isStreamMap) {
+          window.renderStreamMap(content);
+          window.scrollTo(0, 0);
+          return;
+        }
+
         const response = await fetch(page.file);
         if (!response.ok) throw new Error(`Could not load ${page.file}`);
         const markdown = await response.text();
