@@ -1,20 +1,27 @@
-# Day 1: Module 1 - Introduction to SAP Business Technology Platform (BTP)
+# Module 1: SAP & BTP Fundamentals
 
-**Date:** 28 September 2026  
-**Status:** Trainer Module 1 completed
+This module follows the first three training days: an introduction to SAP, key SAP discovery and developer resources, and learning and support portals.
 
 ## Contents
 
+- [Day 1 · SAP Overview](#module-1/day-1)
+- [Day 2 · SAP Discovery Center and SAP Business Accelerator Hub](#module-1/day-2)
+- [Day 3 · SAP Learning Hub, SAP Help Portal, and SAP Community](#module-1/day-3)
 - [What is SAP?](#day-1/what-is-sap)
 - [What is ERP?](#day-1/what-is-erp)
 - [SAP S/4HANA overview](#day-1/sap-s4hana-overview)
 - [SAP Discovery Center](#day-1/sap-discovery-center)
 - [SAP Business Accelerator Hub](#day-1/sap-business-accelerator-hub)
-- [SAP Learning Portal](#day-1/sap-learning-portal)
-- [SAP Community](#day-1/sap-community)
+- [SAP Learning Hub](#day-1/sap-learning-portal)
 - [SAP Help Portal](#day-1/sap-help-portal)
+- [SAP Community](#day-1/sap-community)
 
 <a id="what-is-sap"></a>
+<a id="day-1"></a>
+## Day 1 · SAP Overview
+
+**Date:** 28 September 2026
+
 ## 1. What is SAP?
 
 SAP is a global company that develops software to help organisations run, manage, and improve their businesses.
@@ -200,6 +207,11 @@ SAP Activate is SAP's implementation methodology, combining guided configuration
 ![Image 28: SAP Activate implementation methodology](images/28.png)
 
 <a id="sap-discovery-center"></a>
+<a id="day-2"></a>
+## Day 2 · SAP Discovery Center and SAP Business Accelerator Hub
+
+**Date:** 29 September 2026
+
 ## 4. SAP Discovery Center
 
 [Open SAP Discovery Center](https://discovery-center.cloud.sap/index.html)
@@ -233,7 +245,12 @@ SAP Business Accelerator Hub is a developer-facing portal for discovering APIs a
 Review the API provider's current documentation for authentication, endpoints, request formats, and rate limits: [Alpha API documentation](https://alphaapi.sasonline.in/api-docs/).
 
 <a id="sap-learning-portal"></a>
-## 6. SAP Learning Portal
+<a id="day-3"></a>
+## Day 3 · SAP Learning Hub, SAP Help Portal, and SAP Community
+
+**Date:** 30 September 2026
+
+## 6. SAP Learning Hub
 
 [Open SAP Learning](https://learning.sap.com)
 
@@ -243,17 +260,8 @@ SAP Learning is the official portal for building SAP skills, accessing guided le
 
 ![Image 33: Free vs premium SAP Learning](images/33.png)
 
-<a id="sap-community"></a>
-## 7. SAP Community
-
-[Open SAP Community](https://community.sap.com)
-
-SAP Community is a collaboration hub where SAP professionals, developers, and learners connect to ask questions, share blogs, join groups, and access best practices. It supports peer learning, knowledge exchange, and updates about SAP innovations.
-
-![Image 34: SAP Community](images/34.png)
-
 <a id="sap-help-portal"></a>
-## 8. SAP Help Portal
+## 7. SAP Help Portal
 
 [Open SAP Help Portal](https://help.sap.com/docs)
 
@@ -267,3 +275,12 @@ SAP Help Portal is SAP's official documentation portal and a go-to source for pr
 - Understand API Management policies.
 - Follow official SAP troubleshooting steps.
 - Prepare for certifications and project work with authoritative references.
+
+<a id="sap-community"></a>
+## 8. SAP Community
+
+[Open SAP Community](https://community.sap.com)
+
+SAP Community is a collaboration hub where SAP professionals, developers, and learners connect to ask questions, share blogs, join groups, and access best practices. It supports peer learning, knowledge exchange, and updates about SAP innovations.
+
+![Image 34: SAP Community](images/34.png)
