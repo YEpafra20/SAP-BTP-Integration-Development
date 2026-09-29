@@ -71,12 +71,12 @@
       <section class="map-heading" aria-labelledby="map-title">
         <p class="map-kicker">SAP BTP Integration Development</p>
         <h1 id="map-title">Stream Map</h1>
-        <p class="map-intro">A day-wise view of the training schedule, from BTP fundamentals through the capstone project.</p>
+        <p class="map-intro" id="map-intro"></p>
       </section>
       <section class="map-stats" aria-label="Training summary">
-        <div><strong id="map-total-days"></strong><span>Training days</span></div>
-        <div><strong id="map-area-count"></strong><span>Learning areas</span></div>
-        <div><strong id="map-assessment-days"></strong><span>Assessment days</span></div>
+        <div><strong id="map-total-days"></strong><span>Training days (capstone included)</span></div>
+        <div><strong id="map-area-count"></strong><span>Major areas</span></div>
+        <div><strong id="map-assessment-days"></strong><span>MCQ assessments</span></div>
         <div><strong id="map-capstone-days"></strong><span>Capstone days</span></div>
       </section>
       <section class="map-progress" aria-label="Selected day progress">
@@ -94,7 +94,9 @@
       <section class="map-selected" id="map-selected" aria-live="polite"></section>`;
 
     const categories = [...new Set(trainingData.map((item) => item.category))];
-    const assessmentCount = trainingData.filter((item) => item.category === "Assessment" || item.category === "Revision & Assessment").length;
+    const majorAreaCount = categories.filter((name) => name !== "Other").length;
+    const assessmentCount = trainingData.filter((item) => item.category === "Assessment").length;
+    const practiceAssessmentCount = trainingData.filter((item) => item.category === "Revision & Assessment").length;
     const capstoneCount = trainingData.filter((item) => item.category === "Capstone Project").length;
     const grid = container.querySelector("#map-grid");
     const search = container.querySelector("#map-search");
@@ -106,9 +108,10 @@
     const selected = container.querySelector("#map-selected");
 
     container.querySelector("#map-total-days").textContent = trainingData.length;
-    container.querySelector("#map-area-count").textContent = categories.length;
+    container.querySelector("#map-area-count").textContent = majorAreaCount;
     container.querySelector("#map-assessment-days").textContent = assessmentCount;
     container.querySelector("#map-capstone-days").textContent = capstoneCount;
+    container.querySelector("#map-intro").textContent = `${trainingData.length} scheduled days across ${majorAreaCount} major areas. Includes ${assessmentCount} MCQ assessments and ${practiceAssessmentCount} hands-on/revision assessment sessions. The ${capstoneCount} capstone days are already included in the training-day total.`;
     category.innerHTML += categories.map((name) => `<option value="${escapeHTML(name)}">${escapeHTML(name)}</option>`).join("");
 
     function renderSelectedDay() {
