@@ -141,7 +141,7 @@
       results.textContent = `${visibleDays.length} of ${trainingData.length} training days`;
       grid.innerHTML = visibleDays.length ? visibleDays.map(({ item, index }) => {
         const isCompleted = index < currentDayIndex;
-        const route = index < 3 ? `#module-1/day-${index + 1}` : "#stream-guide";
+        const route = index < 4 ? `#day-${index + 1}` : "#stream-guide";
         return `
           <article class="map-day-card${index === selectedDay ? " is-selected" : ""}${isCompleted ? " is-complete" : ""}" data-day-index="${index}" aria-label="${escapeHTML(item.day)} training day">
             <div class="map-card-top">

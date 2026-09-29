@@ -1,4 +1,4 @@
-> Editable website content is now maintained in [stream-guide.md](stream-guide.md), [stream-details.md](stream-details.md), and [day-wise/day-1/content.md](day-wise/day-1/content.md). Add Day 1 images in `day-wise/day-1/images/` using the filenames shown in the Day 1 file. The content below is the original guide snapshot.
+> Editable website content is maintained in [stream-guide.md](stream-guide.md), [stream-details.md](stream-details.md), and the independent daily files [Day 1](day-wise/day-1/content.md), [Day 2](day-wise/day-2/content.md), [Day 3](day-wise/day-3/content.md), and [Day 4](day-wise/day-4/content.md). Put each day's screenshots in that day's `images/` folder using the filenames referenced in its markdown file. Day 4 image names are `image-1a.png`, `image-1b.png`, `image-1c.png`, and `image-2.png` through `image-6.png`. The content below is the original guide snapshot.
 
 <div class="landing-hero">
   <div class="hero-copy">
