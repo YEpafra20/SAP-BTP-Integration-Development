@@ -78,26 +78,26 @@ body.welcome-locked { overflow: hidden; }
 .stream-map-notice {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
-  padding: 8px 15px;
+  gap: 8px;
+  padding: 6px 12px;
   border: 1px solid var(--blue);
   border-radius: 999px;
   color: var(--button-text);
   background: var(--blue);
   box-shadow: 0 4px 10px color-mix(in srgb, var(--blue) 24%, transparent);
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .stream-map-notice::before {
-  width: 9px;
-  height: 9px;
-  flex: 0 0 9px;
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
   border-radius: 2px;
   background: currentColor;
-  box-shadow: 5px 0 0 currentColor, 0 5px 0 currentColor, 5px 5px 0 currentColor;
+  box-shadow: 4px 0 0 currentColor, 0 4px 0 currentColor, 4px 4px 0 currentColor;
   content: "";
 }
 
@@ -127,7 +127,7 @@ body.welcome-locked { overflow: hidden; }
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   padding: 4px;
   border: 0;
   border-radius: 999px;
@@ -155,9 +155,9 @@ body.welcome-locked { overflow: hidden; }
 
 .theme-toggle-switch {
   position: relative;
-  width: 46px;
-  height: 26px;
-  flex: 0 0 46px;
+  width: 38px;
+  height: 22px;
+  flex: 0 0 38px;
   border-radius: 999px;
   background: #ffcc00;
   transition: background 160ms ease;
@@ -167,8 +167,8 @@ body.welcome-locked { overflow: hidden; }
   position: absolute;
   top: 4px;
   left: 4px;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24);
@@ -177,8 +177,8 @@ body.welcome-locked { overflow: hidden; }
 }
 
 .theme-toggle[aria-pressed="true"] .theme-toggle-switch { background: #ffcc00; }
-.theme-toggle[aria-pressed="true"] .theme-toggle-switch::after { transform: translateX(20px); }
-.theme-toggle-icon { display: block; width: 18px; color: var(--ink); text-align: center; }
+.theme-toggle[aria-pressed="true"] .theme-toggle-switch::after { transform: translateX(16px); }
+.theme-toggle-icon { display: block; width: 14px; color: var(--ink); text-align: center; }
 
 .sidebar {
   position: fixed;
@@ -717,7 +717,13 @@ body.welcome-locked { overflow: hidden; }
 .map-badge { max-width: 60%; padding: 3px 7px; border-radius: 3px; color: var(--blue-dark); background: var(--soft-blue); font-size: 0.66rem; line-height: 1.35; text-align: right; }
 .map-card-topics { display: grid; margin-top: 10px; }
 .map-card-topics > span { padding: 6px 0; border-top: 1px solid var(--line); font-size: 0.79rem; font-weight: 600; line-height: 1.45; }
-.map-card-actions { margin-top: auto; padding-top: 12px; }
+.map-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: auto; padding-top: 12px; }
+.map-meeting-button { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; margin-left: auto; padding: 6px 16px; border: 1px solid #464775; border-radius: 5px; color: #ffffff; background: #6264a7; font: 600 0.74rem 'DM Sans', sans-serif; text-decoration: none; transition: background 140ms ease, transform 140ms ease, box-shadow 140ms ease; }
+.map-meeting-button:hover, .map-meeting-button:focus-visible { background: #464775; box-shadow: 0 3px 9px rgba(70, 71, 117, 0.25); transform: translateY(-1px); outline: none; }
+.content a.map-meeting-button,
+.content a.map-meeting-button:visited,
+.content a.map-meeting-button:hover,
+.content a.map-meeting-button:focus-visible { color: #ffffff; }
 .map-view-button { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 7px 12px; border-radius: 5px; background: var(--blue); color: white; font: 700 0.74rem 'DM Sans', sans-serif; text-decoration: none; transition: background 140ms ease, transform 140ms ease; }
 .map-view-button:hover, .map-view-button:focus-visible { background: var(--blue-dark); transform: translateY(-1px); outline: none; }
 .map-day-card.is-complete .map-view-button { background: #1e9c63; }
@@ -766,7 +772,7 @@ body.welcome-locked { overflow: hidden; }
     }
   .home-button,
   .menu-button { padding: 7px 10px; font-size: 0.72rem; }
-  .theme-toggle { padding: 4px; font-size: 1.15rem; }
+  .theme-toggle { padding: 4px; font-size: 1rem; }
   .welcome-dialog { padding: 25px 22px 23px; }
   .welcome-dialog h1 { font-size: 1.35rem; }
 }
@@ -782,7 +788,7 @@ body.welcome-locked { overflow: hidden; }
   .brand { grid-column: 1; grid-row: 1; font-size: 0.78rem; }
   .top-actions { grid-column: 2; grid-row: 1; gap: 6px; }
   .top-actions > * { padding: 7px 8px; font-size: 0.72rem; }
-  .top-actions > .theme-toggle { padding: 4px; font-size: 1.15rem; }
+  .top-actions > .theme-toggle { padding: 4px; font-size: 1rem; }
   .stream-map-notice { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
   .sidebar { top: 96px; }
 }

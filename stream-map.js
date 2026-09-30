@@ -154,12 +154,15 @@
             <div class="map-card-topics">${item.topics.map((topic) => `<span>${escapeHTML(topic)}</span>`).join("")}</div>
             <div class="map-card-actions">
               <a href="${route}" class="map-view-button" data-route="${route}">View</a>
+              ${index === currentDayIndex ? `<a href="https://teams.microsoft.com/meet/223687928940681?p=aAZIFaYB5va169p4l6" class="map-meeting-button" target="_blank" rel="noopener noreferrer" aria-label="Join ${escapeHTML(item.day)} meeting in Microsoft Teams" title="Join ${escapeHTML(item.day)} meeting in Microsoft Teams">Join meeting</a>` : ""}
             </div>
           </article>`;
       }).join("") : '<p class="map-empty">No training days match your search.</p>';
     }
 
     grid.addEventListener("click", (event) => {
+      if (event.target.closest(".map-meeting-button")) return;
+
       const viewButton = event.target.closest(".map-view-button");
       if (viewButton) {
         event.preventDefault();
