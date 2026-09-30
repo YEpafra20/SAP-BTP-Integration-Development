@@ -13,10 +13,12 @@
       <a class="brand" href="#stream-guide">SAP BTP Integration Development</a>
       <a class="stream-map-notice" href="#stream-map" aria-label="Open Stream Map">Stream Map</a>
       <nav class="top-actions" aria-label="Page controls">
-        <a class="home-button" href="#stream-guide" title="Go to stream guide">Home</a>
-        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
-          <span class="theme-toggle-label">Light</span>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Turn dark mode on" aria-pressed="false">
+          <span class="theme-toggle-icon theme-toggle-sun" aria-hidden="true">☼</span>
+          <span class="theme-toggle-switch" aria-hidden="true"></span>
+          <span class="theme-toggle-icon theme-toggle-moon" aria-hidden="true">☾</span>
         </button>
+        <a class="home-button" href="#stream-guide" title="Go to stream guide">Home</a>
         <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
       </nav>
     </header>
@@ -59,8 +61,7 @@
       document.body.dataset.theme = theme;
       localStorage.setItem('sap-btp-theme', theme);
       themeToggle.setAttribute('aria-pressed', String(isDark));
-      themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-      themeToggle.querySelector('.theme-toggle-label').textContent = isDark ? 'Dark' : 'Light';
+      themeToggle.setAttribute('aria-label', isDark ? 'Turn dark mode off' : 'Turn dark mode on');
     }
 
     const contentPages = {
