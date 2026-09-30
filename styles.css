@@ -306,6 +306,7 @@ body:not(.is-authenticated) .welcome-overlay { display: none; }
   padding-top: 12px;
   border-top: 1px solid var(--line);
 }
+.account-name { overflow-wrap: anywhere; margin: 0 0 3px; color: var(--ink); font-size: 0.84rem; font-weight: 700; }
 .account-email { overflow-wrap: anywhere; margin: 0 0 8px; color: var(--muted); font-size: 0.76rem; }
 .sidebar-account .nav-button { width: 100%; }
 .sidebar-account .account-notice { min-height: 1.3em; margin: 4px 0; color: var(--muted); font-size: 0.72rem; }
@@ -330,8 +331,11 @@ body.is-authenticated .auth-gate { display: none; }
 .auth-form[hidden] { display: none; }
 .auth-form label { margin-top: 5px; color: var(--ink); font-size: 0.84rem; font-weight: 700; }
 .auth-form input { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: var(--paper); font: 400 0.9rem 'DM Sans', sans-serif; }
+.auth-form textarea { width: 100%; min-height: 88px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: var(--paper); font: 400 0.9rem 'DM Sans', sans-serif; resize: vertical; }
 .auth-form input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.auth-form textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .auth-form p { margin: 0 0 5px; color: var(--muted); font-size: 0.84rem; }
+.auth-optional { color: var(--muted); font-size: 0.76rem; font-weight: 400; }
 .auth-submit { min-height: 42px; margin-top: 9px; border: 0; border-radius: 5px; color: var(--button-text); background: var(--blue); font: 700 0.88rem 'DM Sans', sans-serif; cursor: pointer; }
 .auth-submit:hover { background: var(--blue-dark); }
 .auth-submit:disabled { opacity: 0.55; cursor: wait; }
@@ -343,6 +347,10 @@ body.is-authenticated .auth-gate { display: none; }
 .learning-dashboard-heading { margin-bottom: 32px; }
 .content .learning-dashboard-heading h1 { margin: 0 0 7px; font: 700 2rem/1.15 'Space Grotesk', sans-serif; }
 .learning-dashboard-heading > p:last-child { margin: 0; color: var(--muted); }
+.learning-profile { margin: 0 0 30px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.content .learning-profile h2 { margin: 0 0 8px; font-size: 1.05rem; }
+.learning-profile p { margin: 3px 0; color: var(--muted); font-size: 0.88rem; }
+.learning-profile .learning-profile-name { color: var(--ink); font-weight: 700; }
 .learning-dashboard-section { margin: 28px 0 38px; }
 .content .learning-dashboard-section h2 { margin: 0 0 12px; padding: 0 0 8px; border-bottom: 1px solid var(--line); font-size: 1.15rem; }
 .learning-progress-list,
