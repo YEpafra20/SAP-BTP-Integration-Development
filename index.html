@@ -8,6 +8,43 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
+    <div class="auth-panel">
+      <p class="welcome-label">SAP BTP Integration Development</p>
+      <h1 id="auth-title">Sign in to continue learning</h1>
+      <form id="sign-in-form" class="auth-form">
+        <label for="signin-email">Email</label>
+        <input id="signin-email" name="email" type="email" autocomplete="email" required>
+        <label for="signin-password">Password</label>
+        <input id="signin-password" name="password" type="password" autocomplete="current-password" required>
+        <button class="auth-submit" type="submit">Sign in</button>
+        <button class="auth-link" id="show-signup" type="button">Create an account</button>
+        <button class="auth-link" id="show-reset" type="button">Forgot password?</button>
+      </form>
+      <form id="sign-up-form" class="auth-form" hidden>
+        <label for="signup-email">Email</label>
+        <input id="signup-email" name="email" type="email" autocomplete="email" required>
+        <label for="signup-password">Password</label>
+        <input id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+        <button class="auth-submit" type="submit">Create account</button>
+        <button class="auth-link" id="show-signin" type="button">Back to sign in</button>
+      </form>
+      <form id="reset-password-form" class="auth-form" hidden>
+        <p>Enter your account email and we’ll send a password reset link.</p>
+        <label for="reset-email">Email</label>
+        <input id="reset-email" name="email" type="email" autocomplete="email" required>
+        <button class="auth-submit" type="submit">Send reset link</button>
+        <button class="auth-link" id="cancel-reset" type="button">Back to sign in</button>
+      </form>
+      <form id="update-password-form" class="auth-form" hidden>
+        <label for="new-password">New password</label>
+        <input id="new-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+        <button class="auth-submit" type="submit">Update password</button>
+        <button class="auth-link" id="cancel-update" type="button">Cancel</button>
+      </form>
+      <p id="auth-status" class="auth-status" aria-live="polite">Checking your account...</p>
+    </div>
+  </section>
   <div class="site-shell">
     <header class="topbar">
       <a class="brand" href="#stream-guide">SAP BTP Integration Development</a>
@@ -33,6 +70,12 @@
       <a class="nav-button nav-subitem" href="#day-4">Day 4 · Message Protocols</a>
       <a class="community-link" href="https://chat.whatsapp.com/Bgff8re9UIQK4b1Z1ij0U6" target="_blank"
         rel="noopener noreferrer">Get updates on WhatsApp</a>
+      <div class="sidebar-account">
+        <p id="account-email" class="account-email"></p>
+        <a class="nav-button" href="#my-learning">My Learning</a>
+        <p id="account-notice" class="account-notice" aria-live="polite"></p>
+        <button id="sign-out-button" class="sign-out-button" type="button" hidden>Sign out</button>
+      </div>
     </aside>
     <main id="main-content" class="content"></main>
   </div>
@@ -47,7 +90,9 @@
     </section>
   </div>
   <script src="feedback-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="feedback.js"></script>
+  <script src="learning-account.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="stream-map.js"></script>
   <script>
@@ -70,6 +115,7 @@
       '#stream-map': { title: 'Stream Map', isStreamMap: true },
       '#stream-guide': { file: 'stream-guide.md', title: 'Stream Guide' },
       '#stream-details': { file: 'stream-details.md', title: 'Stream Details' },
+      '#my-learning': { title: 'My Learning', isDashboard: true },
       '#module-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: SAP & BTP Fundamentals', imageDirectory: 'day-wise/day-1/images/', isModule: true, feedbackId: 'day-1' },
       '#day-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: SAP Overview', imageDirectory: 'day-wise/day-1/images/', isModule: true, feedbackId: 'day-1' },
       '#day-2': { file: 'day-wise/day-2/content.md', title: 'Day 2: SAP Discovery Resources', imageDirectory: 'day-wise/day-2/images/', isModule: true, feedbackId: 'day-2' },
@@ -77,11 +123,10 @@
       '#day-4': { file: 'day-wise/day-4/content.md', title: 'Day 4: Message Protocols', imageDirectory: 'day-wise/day-4/images/', isModule: true, feedbackId: 'day-4' }
     };
 
-    function addModuleCheckIn(page, route) {
+    async function addModuleCheckIn(page, route) {
       if (!page.isModule) return;
 
-      const moduleId = route.slice(1);
-      const completionKey = `sap-btp-completed-${moduleId}`;
+      const moduleId = page.feedbackId || route.slice(1);
       const checkIn = document.createElement('section');
       checkIn.className = 'module-checkin';
       checkIn.setAttribute('aria-labelledby', 'module-checkin-title');
@@ -99,17 +144,30 @@
 
       const completionButton = checkIn.querySelector('.completion-button');
       const completionStatus = checkIn.querySelector('.completion-status');
-      const isComplete = localStorage.getItem(completionKey) === 'true';
+      let isComplete = false;
+      try {
+        isComplete = await window.learningAccount.getCompletion(moduleId);
+      } catch {
+        completionStatus.textContent = 'Progress could not be loaded. Check the account database setup.';
+      }
       completionButton.setAttribute('aria-pressed', String(isComplete));
       completionButton.textContent = isComplete ? 'Completed' : 'Mark complete';
-      completionButton.addEventListener('click', () => {
+      completionButton.addEventListener('click', async () => {
         const nextComplete = completionButton.getAttribute('aria-pressed') !== 'true';
-        localStorage.setItem(completionKey, String(nextComplete));
-        completionButton.setAttribute('aria-pressed', String(nextComplete));
-        completionButton.textContent = nextComplete ? 'Completed' : 'Mark complete';
-        completionStatus.textContent = nextComplete
-          ? 'Module progress saved on this device.'
-          : 'Module marked as not complete.';
+        completionButton.disabled = true;
+        completionStatus.textContent = 'Saving progress...';
+        try {
+          await window.learningAccount.setCompletion(moduleId, nextComplete);
+          completionButton.setAttribute('aria-pressed', String(nextComplete));
+          completionButton.textContent = nextComplete ? 'Completed' : 'Mark complete';
+          completionStatus.textContent = nextComplete
+            ? 'Module progress saved to your account.'
+            : 'Module marked as not complete.';
+        } catch {
+          completionStatus.textContent = 'Progress could not be saved. Check the account database setup.';
+        } finally {
+          completionButton.disabled = false;
+        }
       });
 
       window.initializeModuleFeedback(checkIn, page.feedbackId || moduleId);
@@ -123,6 +181,12 @@
       content.classList.remove('stream-map-view');
 
       try {
+        if (page.isDashboard) {
+          await renderLearningDashboard();
+          window.scrollTo(0, 0);
+          return;
+        }
+
         if (page.isStreamMap) {
           window.renderStreamMap(content);
           window.scrollTo(0, 0);
@@ -136,7 +200,11 @@
         content.innerHTML = page.imageDirectory
           ? renderedContent.replace(/(src=["'])images\//g, `$1${page.imageDirectory}`)
           : renderedContent;
-        addModuleCheckIn(page, route);
+        if (page.isModule) {
+          window.learningAccount.recordVisit(page.feedbackId || route.slice(1))
+            .catch(() => window.learningAccount.setAccountNotice('Recent activity could not be saved.'));
+        }
+        await addModuleCheckIn(page, route);
         const anchor = anchorId && document.getElementById(decodeURIComponent(anchorId));
         if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
         else window.scrollTo(0, 0);
@@ -145,6 +213,66 @@
       }
     }
 
+    async function renderLearningDashboard() {
+      try {
+        const { progress, activity } = await window.learningAccount.loadLearningOverview();
+        const completedModules = new Set(progress.map((record) => record.module_id));
+        const moduleNames = {
+          'day-1': 'Day 1 · SAP Overview',
+          'day-2': 'Day 2 · SAP Discovery Resources',
+          'day-3': 'Day 3 · Learning Resources',
+          'day-4': 'Day 4 · Message Protocols'
+        };
+        content.innerHTML = `
+          <div class="learning-dashboard-heading">
+            <p class="checkin-kicker">Your account</p>
+            <h1>My Learning</h1>
+            <p>${completedModules.size} of 4 modules complete</p>
+          </div>
+          <section class="learning-dashboard-section" aria-labelledby="learning-progress-title">
+            <h2 id="learning-progress-title">Module progress</h2>
+            <ul class="learning-progress-list"></ul>
+          </section>
+          <section class="learning-dashboard-section" aria-labelledby="learning-activity-title">
+            <h2 id="learning-activity-title">Recent activity</h2>
+            <ol class="learning-activity-list"></ol>
+          </section>`;
+
+        const progressList = content.querySelector('.learning-progress-list');
+        Object.entries(moduleNames).forEach(([moduleId, name]) => {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          const state = document.createElement('span');
+          link.href = `#${moduleId}`;
+          link.textContent = name;
+          state.className = completedModules.has(moduleId) ? 'learning-complete' : 'learning-incomplete';
+          state.textContent = completedModules.has(moduleId) ? 'Completed' : 'Not complete';
+          item.append(link, state);
+          progressList.append(item);
+        });
+
+        const activityList = content.querySelector('.learning-activity-list');
+        if (!activity.length) {
+          const emptyState = document.createElement('li');
+          emptyState.textContent = 'Your module visits will appear here.';
+          activityList.append(emptyState);
+        } else {
+          activity.forEach((record) => {
+            const item = document.createElement('li');
+            const moduleName = moduleNames[record.module_id] || 'Learning module';
+            item.textContent = `${moduleName} · ${new Date(record.visited_at).toLocaleString()}`;
+            activityList.append(item);
+          });
+        }
+      } catch {
+        content.innerHTML = '<h1>My Learning is unavailable</h1><p>Check that the account tables have been created in Supabase.</p>';
+      }
+    }
+
+    window.addEventListener('learningauthchange', (event) => {
+      if (event.detail.user) renderPage();
+      else content.innerHTML = '';
+    });
     window.addEventListener('hashchange', renderPage);
 
     menuButton.addEventListener('click', () => {
@@ -173,7 +301,6 @@
     const savedTheme = localStorage.getItem('sap-btp-theme') || 'light';
     applyTheme(savedTheme);
 
-    renderPage();
   </script>
 </body>
 </html>
