@@ -10,6 +10,45 @@ A SAP BTP Integration Developer designs and builds secure cloud integrations tha
 - Design, build, test, and monitor integrations so systems exchange data without manual effort.
 - Transform data, secure APIs, and troubleshoot failed transactions.
 
+<div class="quick-access">
+  <div class="quick-access-header">
+    <p class="quick-access-kicker">Quick access</p>
+    <h2>Start with the right path</h2>
+  </div>
+  <div class="quick-access-grid">
+    <a class="quick-link-card" href="#stream-map">
+      <span>01</span>
+      <strong>Stream Map</strong>
+      <small>See the full learning journey</small>
+    </a>
+    <a class="quick-link-card" href="#stream-details">
+      <span>02</span>
+      <strong>Stream Details</strong>
+      <small>Understand the role and scope</small>
+    </a>
+    <a class="quick-link-card" href="#day-1">
+      <span>03</span>
+      <strong>Day 1</strong>
+      <small>SAP overview and foundations</small>
+    </a>
+    <a class="quick-link-card" href="#day-2">
+      <span>04</span>
+      <strong>Day 2</strong>
+      <small>Discovery resources and tools</small>
+    </a>
+    <a class="quick-link-card" href="#day-3">
+      <span>05</span>
+      <strong>Day 3</strong>
+      <small>Learning resources and practice</small>
+    </a>
+    <a class="quick-link-card" href="#day-4">
+      <span>06</span>
+      <strong>Day 4</strong>
+      <small>Message protocols and integrations</small>
+    </a>
+  </div>
+</div>
+
 ## What is SAP?
 
 SAP is a global enterprise software company. Its products help organisations manage operations, transactions, supply chains, and customer processes.

@@ -5,11 +5,14 @@
   const isConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
   async function request(path, body) {
+    const accessToken = window.learningAccount?.getAccessToken();
+    if (!accessToken) throw new Error('Sign in before submitting feedback.');
+
     const response = await fetch(`${supabaseUrl}/rest/v1/${path}`, {
       method: 'POST',
       headers: {
         apikey: supabaseAnonKey,
-        Authorization: `Bearer ${supabaseAnonKey}`,
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         Prefer: 'return=minimal'
       },
