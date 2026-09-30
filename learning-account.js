@@ -5,12 +5,14 @@
   const authGate = document.getElementById('auth-gate');
   const authTitle = document.getElementById('auth-title');
   const authStatus = document.getElementById('auth-status');
+  const accountName = document.getElementById('account-name');
   const accountEmail = document.getElementById('account-email');
   const accountNotice = document.getElementById('account-notice');
   const signOutButton = document.getElementById('sign-out-button');
   const authForms = {
     signIn: document.getElementById('sign-in-form'),
     signUp: document.getElementById('sign-up-form'),
+    accessRequest: document.getElementById('access-request-form'),
     reset: document.getElementById('reset-password-form'),
     update: document.getElementById('update-password-form')
   };
@@ -28,6 +30,7 @@
   const authModes = {
     signIn: 'Sign in to continue learning',
     signUp: 'Create your learning account',
+    accessRequest: 'Request account access',
     reset: 'Reset your password',
     update: 'Choose a new password'
   };
@@ -50,6 +53,8 @@
     const isSignedIn = Boolean(currentUser);
     document.body.classList.toggle('is-authenticated', isSignedIn);
     authGate.hidden = isSignedIn;
+    accountName.textContent = currentUser?.user_metadata?.full_name || '';
+    accountName.hidden = !accountName.textContent;
     accountEmail.textContent = currentUser?.email || '';
     signOutButton.hidden = !isSignedIn;
 
@@ -127,13 +132,41 @@
       const { data, error } = await client.auth.signUp({
         email: String(formData.get('email')).trim(),
         password: String(formData.get('password')),
-        options: { emailRedirectTo: `${window.location.origin}${window.location.pathname}` }
+        options: {
+          data: { full_name: String(formData.get('full_name')).trim() },
+          emailRedirectTo: `${window.location.origin}${window.location.pathname}`
+        }
       });
       if (error) throw error;
       if (!data.session) {
         authStatus.textContent = 'Check your email to confirm your account, then sign in.';
         authForms.signUp.reset();
       }
+    });
+  });
+
+  authForms.accessRequest.addEventListener('submit', (event) => {
+    event.preventDefault();
+    handleSubmit(authForms.accessRequest, async (formData) => {
+      const { error } = await client.from('account_access_requests').insert({
+        full_name: String(formData.get('full_name')).trim(),
+        email: String(formData.get('email')).trim().toLowerCase(),
+        message: String(formData.get('message')).trim()
+      });
+      if (error) {
+        const errorMessage = error.message || '';
+        if (error.code === 'PGRST205' || (errorMessage.includes('account_access_requests') && errorMessage.includes('schema cache'))) {
+          authStatus.textContent = 'Access requests are not set up yet. Ask the administrator to run supabase-accounts.sql in the Supabase SQL Editor, then reload and try again.';
+          return;
+        }
+        if (error.code === '23505') {
+          authStatus.textContent = 'A request for this email is already on file. Please wait for the administrator to review it.';
+          return;
+        }
+        throw error;
+      }
+      authStatus.textContent = 'Request received. An administrator will review it and add your account manually.';
+      authForms.accessRequest.reset();
     });
   });
 
@@ -159,7 +192,9 @@
   });
 
   document.getElementById('show-signup').addEventListener('click', () => setAuthMode('signUp'));
+  document.getElementById('show-access-request').addEventListener('click', () => setAuthMode('accessRequest'));
   document.getElementById('show-signin').addEventListener('click', () => setAuthMode('signIn'));
+  document.getElementById('cancel-access-request').addEventListener('click', () => setAuthMode('signIn'));
   document.getElementById('show-reset').addEventListener('click', () => setAuthMode('reset'));
   document.getElementById('cancel-reset').addEventListener('click', () => setAuthMode('signIn'));
   document.getElementById('cancel-update').addEventListener('click', () => setAuthMode('signIn'));
@@ -187,6 +222,7 @@
       const { error } = await client.from('user_module_progress').upsert({
         user_id: currentUser.id,
         module_id: moduleId,
+        full_name: currentUser.user_metadata?.full_name || null,
         completed_at: new Date().toISOString()
       }, { onConflict: 'user_id,module_id' });
       if (error) throw error;
@@ -208,7 +244,8 @@
 
     const { error } = await client.from('user_learning_activity').insert({
       user_id: currentUser.id,
-      module_id: moduleId
+      module_id: moduleId,
+      full_name: currentUser.user_metadata?.full_name || null
     });
     if (error) throw error;
     sessionStorage.setItem(visitKey, 'true');

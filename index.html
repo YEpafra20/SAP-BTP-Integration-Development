@@ -22,12 +22,26 @@
         <button class="auth-link" id="show-reset" type="button">Forgot password?</button>
       </form>
       <form id="sign-up-form" class="auth-form" hidden>
+        <label for="signup-name">Full name</label>
+        <input id="signup-name" name="full_name" type="text" autocomplete="name" maxlength="120" required>
         <label for="signup-email">Email</label>
         <input id="signup-email" name="email" type="email" autocomplete="email" required>
         <label for="signup-password">Password</label>
         <input id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
         <button class="auth-submit" type="submit">Create account</button>
+        <button class="auth-link" id="show-access-request" type="button">Not receiving the confirmation email? Request access</button>
         <button class="auth-link" id="show-signin" type="button">Back to sign in</button>
+      </form>
+      <form id="access-request-form" class="auth-form" hidden>
+        <p>Share your email and an administrator will review your request and add your account manually.</p>
+        <label for="request-name">Full name</label>
+        <input id="request-name" name="full_name" type="text" autocomplete="name" maxlength="120" required>
+        <label for="request-email">Email</label>
+        <input id="request-email" name="email" type="email" autocomplete="email" required>
+        <label for="request-message">Message <span class="auth-optional">Optional</span></label>
+        <textarea id="request-message" name="message" maxlength="500" rows="3" placeholder="Add any details that may help the administrator."></textarea>
+        <button class="auth-submit" type="submit">Request access</button>
+        <button class="auth-link" id="cancel-access-request" type="button">Back to sign in</button>
       </form>
       <form id="reset-password-form" class="auth-form" hidden>
         <p>Enter your account email and we’ll send a password reset link.</p>
@@ -71,6 +85,7 @@
       <a class="community-link" href="https://chat.whatsapp.com/Bgff8re9UIQK4b1Z1ij0U6" target="_blank"
         rel="noopener noreferrer">Get updates on WhatsApp</a>
       <div class="sidebar-account">
+        <p id="account-name" class="account-name" hidden></p>
         <p id="account-email" class="account-email"></p>
         <a class="nav-button" href="#my-learning">My Learning</a>
         <p id="account-notice" class="account-notice" aria-live="polite"></p>
@@ -229,6 +244,11 @@
             <h1>My Learning</h1>
             <p>${completedModules.size} of 4 modules complete</p>
           </div>
+          <section class="learning-profile" aria-labelledby="learning-profile-title">
+            <h2 id="learning-profile-title">Profile</h2>
+            <p class="learning-profile-name"></p>
+            <p class="learning-profile-email"></p>
+          </section>
           <section class="learning-dashboard-section" aria-labelledby="learning-progress-title">
             <h2 id="learning-progress-title">Module progress</h2>
             <ul class="learning-progress-list"></ul>
@@ -237,6 +257,10 @@
             <h2 id="learning-activity-title">Recent activity</h2>
             <ol class="learning-activity-list"></ol>
           </section>`;
+
+          const user = window.learningAccount.user;
+          content.querySelector('.learning-profile-name').textContent = user?.user_metadata?.full_name || 'Name not provided';
+          content.querySelector('.learning-profile-email').textContent = user?.email || '';
 
         const progressList = content.querySelector('.learning-progress-list');
         Object.entries(moduleNames).forEach(([moduleId, name]) => {
