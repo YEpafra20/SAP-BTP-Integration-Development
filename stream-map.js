@@ -4,7 +4,7 @@
     { day: "Day 2", date: "2026-09-29", category: "SAP & BTP Fundamentals", topics: ["SAP Discovery Center", "SAP Business Accelerator Hub"] },
     { day: "Day 3", date: "2026-09-30", category: "SAP & BTP Fundamentals", topics: ["SAP Learning Hub", "SAP Help Portal", "SAP Community"] },
     { day: "Day 4", date: "2026-10-01", category: "Connectivity & Connectors", topics: ["Message protocols: SOAP, REST, IDOC, RFC, AMQP"] },
-    { day: "Day 5", date: "2026-10-05", category: "Revision & Assessment", topics: ["Introduction to SAP BTP", "Cloud Foundry", "Hands-on / Assessment"] },
+    { day: "Day 5", date: "2026-10-05", category: "SAP BTP Fundamentals", topics: ["Introduction to SAP BTP", "Cloud Foundry", "Create an SAP BTP trial account"] },
     { day: "Day 6", date: "2026-10-06", category: "Other", topics: ["Agentic AI"] },
     { day: "Day 7", date: "2026-10-07", category: "SAP Integration Suite", topics: ["Introduction to SAP Integration Suite", "Subscription and Activation"] },
     { day: "Day 8", date: "2026-10-08", category: "SAP Integration Suite", topics: ["Overview of SAP Cloud Integration", "XSLT Demo"] },
@@ -56,16 +56,43 @@
     });
   }
 
-  function getCurrentDayIndex() {
-    const today = new Date();
-    const todayAtMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const currentIndex = trainingData.findIndex((item) => new Date(`${item.date}T00:00:00`) >= todayAtMidnight);
+  const indiaDateTimeFormatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23"
+  });
+
+  function getIndiaDateTime(date = new Date()) {
+    const parts = Object.fromEntries(indiaDateTimeFormatter.formatToParts(date)
+      .filter(({ type }) => ["year", "month", "day", "hour", "minute"].includes(type))
+      .map(({ type, value }) => [type, value]));
+
+    return {
+      date: `${parts.year}-${parts.month}-${parts.day}`,
+      minuteOfDay: Number(parts.hour) * 60 + Number(parts.minute)
+    };
+  }
+
+  function isMeetingWindowOpen(date = new Date()) {
+    const { minuteOfDay } = getIndiaDateTime(date);
+    return minuteOfDay >= 7 * 60 + 30 && minuteOfDay < 17 * 60 + 30;
+  }
+
+  function getCurrentDayIndex(date = new Date()) {
+    const today = getIndiaDateTime(date).date;
+    const currentIndex = trainingData.findIndex((item) => item.date >= today);
     return currentIndex >= 0 ? currentIndex : trainingData.length - 1;
   }
 
   let selectedDay = getCurrentDayIndex();
+  let meetingWindowTimer = null;
 
   function renderStreamMap(container) {
+    if (meetingWindowTimer) window.clearInterval(meetingWindowTimer);
     container.classList.add("stream-map-view");
     container.innerHTML = `
       <section class="map-heading" aria-labelledby="map-title">
@@ -133,6 +160,7 @@
       const query = search.value.trim().toLocaleLowerCase();
       const chosenCategory = category.value;
       const currentDayIndex = getCurrentDayIndex();
+      const meetingWindowOpen = isMeetingWindowOpen();
       const visibleDays = trainingData.map((item, index) => ({ item, index })).filter(({ item }) => {
         const text = `${item.day} ${item.date} ${item.category} ${item.topics.join(" ")}`.toLocaleLowerCase();
         return (chosenCategory === "all" || item.category === chosenCategory) && (!query || text.includes(query));
@@ -141,7 +169,7 @@
       results.textContent = `${visibleDays.length} of ${trainingData.length} training days`;
       grid.innerHTML = visibleDays.length ? visibleDays.map(({ item, index }) => {
         const isCompleted = index < currentDayIndex;
-        const route = index < 4 ? `#day-${index + 1}` : "#stream-guide";
+        const route = index < 5 ? `#day-${index + 1}` : "#stream-guide";
         return `
           <article class="map-day-card${index === selectedDay ? " is-selected" : ""}${isCompleted ? " is-complete" : ""}" data-day-index="${index}" aria-label="${escapeHTML(item.day)} training day">
             <div class="map-card-top">
@@ -154,7 +182,7 @@
             <div class="map-card-topics">${item.topics.map((topic) => `<span>${escapeHTML(topic)}</span>`).join("")}</div>
             <div class="map-card-actions">
               <a href="${route}" class="map-view-button" data-route="${route}">View</a>
-              ${index === currentDayIndex ? `<a href="https://teams.microsoft.com/meet/223687928940681?p=aAZIFaYB5va169p4l6" class="map-meeting-button" target="_blank" rel="noopener noreferrer" aria-label="Join ${escapeHTML(item.day)} meeting in Microsoft Teams" title="Join ${escapeHTML(item.day)} meeting in Microsoft Teams">Join meeting</a>` : ""}
+              ${index === currentDayIndex && meetingWindowOpen ? `<a href="https://teams.microsoft.com/meet/223687928940681?p=aAZIFaYB5va169p4l6" class="map-meeting-button" target="_blank" rel="noopener noreferrer" aria-label="Join ${escapeHTML(item.day)} meeting in Microsoft Teams" title="Join ${escapeHTML(item.day)} meeting in Microsoft Teams">Join meeting</a>` : ""}
             </div>
           </article>`;
       }).join("") : '<p class="map-empty">No training days match your search.</p>';
@@ -181,6 +209,14 @@
     category.addEventListener("change", renderCards);
     renderSelectedDay();
     renderCards();
+    meetingWindowTimer = window.setInterval(() => {
+      if (window.location.hash !== "#stream-map") {
+        window.clearInterval(meetingWindowTimer);
+        meetingWindowTimer = null;
+        return;
+      }
+      renderCards();
+    }, 30_000);
   }
 
   window.renderStreamMap = renderStreamMap;

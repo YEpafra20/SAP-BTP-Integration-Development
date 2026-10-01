@@ -1,10 +1,16 @@
 create table if not exists public.module_feedback (
   id uuid primary key default gen_random_uuid(),
-  module_id text not null check (module_id in ('day-1', 'day-2', 'day-3', 'day-4')),
+  module_id text not null check (module_id ~ '^day-[1-9][0-9]*$'),
   is_useful boolean not null,
   comment text check (comment is null or char_length(comment) <= 1000),
   created_at timestamptz not null default now()
 );
+
+alter table public.module_feedback
+  drop constraint if exists module_feedback_module_id_check;
+alter table public.module_feedback
+  add constraint module_feedback_module_id_check
+  check (module_id ~ '^day-[1-9][0-9]*$');
 
 alter table public.module_feedback enable row level security;
 revoke all on table public.module_feedback from anon, authenticated;

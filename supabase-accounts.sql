@@ -1,6 +1,6 @@
 create table if not exists public.user_module_progress (
   user_id uuid not null references auth.users(id) on delete cascade,
-  module_id text not null check (module_id in ('day-1', 'day-2', 'day-3', 'day-4')),
+  module_id text not null check (module_id ~ '^day-[1-9][0-9]*$'),
   full_name text,
   completed_at timestamptz not null default now(),
   primary key (user_id, module_id)
@@ -36,12 +36,24 @@ create policy "Delete own module progress"
 create table if not exists public.user_learning_activity (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
-  module_id text not null check (module_id in ('day-1', 'day-2', 'day-3', 'day-4')),
+  module_id text not null check (module_id ~ '^day-[1-9][0-9]*$'),
   full_name text,
   visited_at timestamptz not null default now()
 );
 
 alter table public.user_learning_activity add column if not exists full_name text;
+
+alter table public.user_module_progress
+  drop constraint if exists user_module_progress_module_id_check;
+alter table public.user_module_progress
+  add constraint user_module_progress_module_id_check
+  check (module_id ~ '^day-[1-9][0-9]*$');
+
+alter table public.user_learning_activity
+  drop constraint if exists user_learning_activity_module_id_check;
+alter table public.user_learning_activity
+  add constraint user_learning_activity_module_id_check
+  check (module_id ~ '^day-[1-9][0-9]*$');
 
 create index if not exists user_learning_activity_user_visited_idx
   on public.user_learning_activity (user_id, visited_at desc);
