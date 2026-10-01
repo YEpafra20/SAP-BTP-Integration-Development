@@ -88,9 +88,11 @@
       <a class="nav-button" href="#stream-details">Stream Details</a>
       <div class="sidebar-title day-nav-title">Day Wise Resources</div>
       <a class="nav-button nav-subitem" href="#day-1">Day 1 · SAP Overview</a>
+      <a class="nav-button nav-subitem" href="#scenario-examples">Scenario-Based Examples</a>
       <a class="nav-button nav-subitem" href="#day-2">Day 2 · SAP Discovery Resources</a>
       <a class="nav-button nav-subitem" href="#day-3">Day 3 · Learning Resources</a>
       <a class="nav-button nav-subitem" href="#day-4">Day 4 · Message Protocols</a>
+      <a class="nav-button nav-subitem" href="#day-5">Day 5 · Introduction to SAP BTP</a>
       <a class="community-link" href="https://chat.whatsapp.com/Bgff8re9UIQK4b1Z1ij0U6" target="_blank"
         rel="noopener noreferrer">Get updates on WhatsApp</a>
       <div class="sidebar-account">
@@ -140,11 +142,13 @@
       '#stream-guide': { file: 'stream-guide.md', title: 'Stream Guide' },
       '#stream-details': { file: 'stream-details.md', title: 'Stream Details' },
       '#my-learning': { title: 'My Learning', isDashboard: true },
+      '#scenario-examples': { file: 'day-wise/scenario-examples/content.md', title: 'Scenario-Based Examples', imageDirectory: 'day-wise/scenario-examples/images/' },
       '#module-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: SAP & BTP Fundamentals', imageDirectory: 'day-wise/day-1/images/', isModule: true, feedbackId: 'day-1' },
       '#day-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: SAP Overview', imageDirectory: 'day-wise/day-1/images/', isModule: true, feedbackId: 'day-1' },
       '#day-2': { file: 'day-wise/day-2/content.md', title: 'Day 2: SAP Discovery Resources', imageDirectory: 'day-wise/day-2/images/', isModule: true, feedbackId: 'day-2' },
       '#day-3': { file: 'day-wise/day-3/content.md', title: 'Day 3: Learning Resources', imageDirectory: 'day-wise/day-3/images/', isModule: true, feedbackId: 'day-3' },
-      '#day-4': { file: 'day-wise/day-4/content.md', title: 'Day 4: Message Protocols', imageDirectory: 'day-wise/day-4/images/', isModule: true, feedbackId: 'day-4' }
+      '#day-4': { file: 'day-wise/day-4/content.md', title: 'Day 4: Message Protocols', imageDirectory: 'day-wise/day-4/images/', isModule: true, feedbackId: 'day-4' },
+      '#day-5': { file: 'day-wise/day-5/content.md', title: 'Day 5: Introduction to SAP BTP', imageDirectory: 'day-wise/day-5/images/', isModule: true, feedbackId: 'day-5' }
     };
 
     async function addModuleCheckIn(page, route) {
@@ -245,13 +249,14 @@
           'day-1': 'Day 1 · SAP Overview',
           'day-2': 'Day 2 · SAP Discovery Resources',
           'day-3': 'Day 3 · Learning Resources',
-          'day-4': 'Day 4 · Message Protocols'
+          'day-4': 'Day 4 · Message Protocols',
+          'day-5': 'Day 5 · Introduction to SAP BTP'
         };
         content.innerHTML = `
           <div class="learning-dashboard-heading">
             <p class="checkin-kicker">Your account</p>
             <h1>My Learning</h1>
-            <p>${completedModules.size} of 4 modules complete</p>
+            <p>${completedModules.size} of ${Object.keys(moduleNames).length} modules complete</p>
           </div>
           <section class="learning-profile" aria-labelledby="learning-profile-title">
             <h2 id="learning-profile-title">Profile</h2>

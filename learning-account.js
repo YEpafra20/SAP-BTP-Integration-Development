@@ -19,7 +19,7 @@
   const client = supabaseUrl && supabaseAnonKey && window.supabase
     ? window.supabase.createClient(supabaseUrl, supabaseAnonKey)
     : null;
-  const moduleIds = ['day-1', 'day-2', 'day-3', 'day-4'];
+  const moduleIds = ['day-1', 'day-2', 'day-3', 'day-4', 'day-5'];
   const legacyProgressPrefix = 'sap-btp-completed-';
   let currentSession = null;
   let currentUser = null;
