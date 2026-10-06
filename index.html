@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAP BTP Integration Development</title>
   <link rel="icon" type="image/png" href="sap.png">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=assessment-popup-20261006">
 </head>
 <body>
   <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
@@ -93,6 +93,11 @@
       <a class="nav-button nav-subitem" href="#day-3">Day 3 · Learning Resources</a>
       <a class="nav-button nav-subitem" href="#day-4">Day 4 · Message Protocols</a>
       <a class="nav-button nav-subitem" href="#day-5">Day 5 · Introduction to SAP BTP</a>
+      <a class="nav-button nav-subitem" href="#day-6">Day 6 · Agentic AI</a>
+      <a class="nav-button nav-subitem" href="#day-7">Day 7 · SAP Integration Suite</a>
+      <a class="nav-button nav-subitem" href="#day-8">Day 8 · SAP Cloud Integration Overview</a>
+      <a class="nav-button nav-subitem" href="#day-9">Day 9 · Cloud Integration Tools</a>
+      <a class="nav-button nav-subitem" href="#day-10">Day 10 · Pre-Packaged Content</a>
       <a class="community-link" href="https://chat.whatsapp.com/Bgff8re9UIQK4b1Z1ij0U6" target="_blank"
         rel="noopener noreferrer">Get updates on WhatsApp</a>
       <div class="sidebar-account">
@@ -105,14 +110,41 @@
     </aside>
     <main id="main-content" class="content"></main>
   </div>
-  <div class="welcome-overlay" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+  <template id="assessment-schedule-template">
+    <div class="assessment-table-wrap" role="region" aria-label="Assessment schedule" tabindex="0">
+      <table class="assessment-table">
+        <thead><tr><th scope="col">Assessment Type</th><th scope="col">Exam Type</th><th scope="col">Schedule</th></tr></thead>
+        <tbody>
+          <tr><td>MCQ</td><td>MCQ 1</td><td>26 Oct 2026 · 09:30 AM–11:00 AM</td></tr>
+          <tr><td>MCQ</td><td>MCQ 2</td><td>13 Nov 2026 · 01:30 PM–03:00 PM</td></tr>
+          <tr><td>HON</td><td>HON</td><td>16 Nov 2026 · 01:30 PM–04:30 PM</td></tr>
+          <tr><td>Capstone</td><td>Capstone</td><td>17 Nov 2026, 09:00 AM–23 Nov 2026, 06:00 PM</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="assessment-change-note"><strong>Note:</strong> Assessment date and time are subject to change view holidays and unforeseen circumstances. We shall keep you informed for changes, if any.</p>
+  </template>
+  <div class="welcome-overlay is-dismissed" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
     <section class="welcome-dialog">
+      <button class="welcome-close" type="button" aria-label="Close welcome message" title="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
       <p class="welcome-label">Community learning resource</p>
       <h1 id="welcome-title">Welcome to the SAP BTP Integration Development</h1>
       <p>This page is not an official SAP or Accenture website. It was created to help the community understand concepts related to the allocated role.</p>
       <p>The page is available until onboarding. The owner may add learning-plan updates, role-related resources, and other helpful information. Content may be updated automatically as new learning notes are published.</p>
       <p>For the best experience, view this page in Desktop mode.</p>
       <button class="agree-button" type="button">Agree and continue</button>
+    </section>
+  </div>
+  <div class="assessment-overlay" role="dialog" aria-modal="true" aria-labelledby="assessment-popup-title">
+    <section class="assessment-dialog">
+      <button class="assessment-close" type="button" aria-label="Close assessment schedule" title="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <p class="welcome-label">Important dates</p>
+      <h1 id="assessment-popup-title">Assessments and capstone</h1>
+      <div class="assessment-popup-schedule"></div>
     </section>
   </div>
   <script src="feedback-config.js"></script>
@@ -126,8 +158,13 @@
     const menuButton = document.querySelector('.menu-button');
     const sidebar = document.querySelector('.sidebar');
     const welcomeOverlay = document.querySelector('.welcome-overlay');
+    const assessmentOverlay = document.querySelector('.assessment-overlay');
     const agreeButton = document.querySelector('.agree-button');
+    const closeWelcomeButton = document.querySelector('.welcome-close');
+    const closeAssessmentButton = document.querySelector('.assessment-close');
     const themeToggle = document.getElementById('theme-toggle');
+    const assessmentScheduleTemplate = document.getElementById('assessment-schedule-template');
+    document.querySelector('.assessment-popup-schedule').append(assessmentScheduleTemplate.content.cloneNode(true));
 
     function applyTheme(theme) {
       const isDark = theme === 'dark';
@@ -135,6 +172,16 @@
       localStorage.setItem('sap-btp-theme', theme);
       themeToggle.setAttribute('aria-pressed', String(isDark));
       themeToggle.setAttribute('aria-label', isDark ? 'Turn dark mode off' : 'Turn dark mode on');
+    }
+
+    function escapeHtml(value = '') {
+      return String(value).replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[character]));
     }
 
     const contentPages = {
@@ -148,8 +195,116 @@
       '#day-2': { file: 'day-wise/day-2/content.md', title: 'Day 2: SAP Discovery Resources', imageDirectory: 'day-wise/day-2/images/', isModule: true, feedbackId: 'day-2' },
       '#day-3': { file: 'day-wise/day-3/content.md', title: 'Day 3: Learning Resources', imageDirectory: 'day-wise/day-3/images/', isModule: true, feedbackId: 'day-3' },
       '#day-4': { file: 'day-wise/day-4/content.md', title: 'Day 4: Message Protocols', imageDirectory: 'day-wise/day-4/images/', isModule: true, feedbackId: 'day-4' },
-      '#day-5': { file: 'day-wise/day-5/content.md', title: 'Day 5: Introduction to SAP BTP', imageDirectory: 'day-wise/day-5/images/', isModule: true, feedbackId: 'day-5' }
+      '#day-5': { file: 'day-wise/day-5/content.md', title: 'Day 5: Introduction to SAP BTP', imageDirectory: 'day-wise/day-5/images/', isModule: true, feedbackId: 'day-5' },
+      '#day-6': { title: 'Day 6 · Agentic AI', isModule: true, feedbackId: 'day-6', isGenerated: true },
+      '#day-7': { file: 'day-wise/day-7/content.md', title: 'Day 7: Introduction to SAP Integration Suite', imageDirectory: 'day-wise/day-7/images/', isModule: true, feedbackId: 'day-7' },
+      '#day-8': { file: 'day-wise/day-8/content.md', title: 'Day 8: SAP Cloud Integration Overview', imageDirectory: 'day-wise/day-8/images/', isModule: true, feedbackId: 'day-8' },
+      '#day-9': { file: 'day-wise/day-9/content.md', title: 'Day 9: SAP Cloud Integration Tools and Basic Concepts', imageDirectory: 'day-wise/day-9/images/', isModule: true, feedbackId: 'day-9' },
+      '#day-10': { file: 'day-wise/day-10/content.md', title: 'Day 10: SAP Cloud Integration Pre-Packaged Content', imageDirectory: 'day-wise/day-10/images/', isModule: true, feedbackId: 'day-10' }
     };
+
+    const scheduledModules = window.SAP_BTP_STREAM_DATA || [];
+    scheduledModules.forEach((day, index) => {
+      const moduleId = `day-${index + 1}`;
+      if (index >= 5 && !contentPages[`#${moduleId}`]?.file) {
+        contentPages[`#${moduleId}`] = {
+          title: `${day.day} · ${day.category}`,
+          isModule: true,
+          feedbackId: moduleId,
+          isGenerated: true,
+          moduleTopics: day.topics,
+          moduleDate: day.date,
+          moduleCategory: day.category
+        };
+      }
+    });
+
+    const moduleScrollKeyPrefix = 'sap-btp-module-scroll:';
+    let scheduledScrollSave = null;
+
+    window.addEventListener('scroll', () => {
+      const route = window.location.hash.split('/')[0];
+      if (!contentPages[route]?.isModule) return;
+
+      const scrollState = { route, position: window.scrollY };
+      if (scheduledScrollSave) {
+        scheduledScrollSave.route = scrollState.route;
+        scheduledScrollSave.position = scrollState.position;
+        return;
+      }
+
+      scheduledScrollSave = scrollState;
+      window.requestAnimationFrame(() => {
+        const { route: savedRoute, position } = scheduledScrollSave;
+        if (contentPages[savedRoute]?.isModule) {
+          localStorage.setItem(`${moduleScrollKeyPrefix}${savedRoute}`, String(position));
+        }
+        scheduledScrollSave = null;
+      });
+    }, { passive: true });
+
+    function getActiveModuleRoute() {
+      const route = window.location.hash.split('/')[0];
+      return contentPages[route]?.isModule ? route : null;
+    }
+
+    function saveActiveModuleScroll() {
+      const route = getActiveModuleRoute();
+      if (route) localStorage.setItem(`${moduleScrollKeyPrefix}${route}`, String(window.scrollY));
+    }
+
+    function restoreModuleScroll(route) {
+      const savedPosition = Number(localStorage.getItem(`${moduleScrollKeyPrefix}${route}`));
+      window.scrollTo({ top: Number.isFinite(savedPosition) ? savedPosition : 0, behavior: 'instant' });
+    }
+
+    function restoreActiveModuleScroll() {
+      const route = getActiveModuleRoute();
+      if (route) restoreModuleScroll(route);
+    }
+
+    window.addEventListener('pagehide', saveActiveModuleScroll);
+    window.addEventListener('pageshow', () => window.requestAnimationFrame(restoreActiveModuleScroll));
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') saveActiveModuleScroll();
+      else window.requestAnimationFrame(restoreActiveModuleScroll);
+    });
+
+    function renderGeneratedModulePage(page) {
+      const moduleInfo = window.SAP_BTP_DAY_MODULES?.[page.feedbackId] || {
+        title: page.title,
+        moduleId: page.feedbackId,
+        topics: page.moduleTopics || [],
+        date: page.moduleDate,
+        category: page.moduleCategory || 'Learning module'
+      };
+
+      const dateText = moduleInfo.date
+        ? new Date(`${moduleInfo.date}T00:00:00`).toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          })
+        : 'Module schedule';
+
+      const topicList = (moduleInfo.topics || []).map((topic) => `<li>${escapeHtml(topic)}</li>`).join('');
+
+      return `
+        <article class="module-page generated-module-page">
+          <p class="checkin-kicker">Learning module</p>
+          <h1>${escapeHtml(moduleInfo.title)}</h1>
+          <p class="module-meta">${escapeHtml(moduleInfo.category)} · ${escapeHtml(dateText)}</p>
+          <div class="module-summary">
+            <h2>Overview</h2>
+            <p>This module continues the SAP BTP Integration Development learning path. Review the focus areas below before continuing with the rest of the course.</p>
+          </div>
+          <div class="module-topics">
+            <h2>Focus areas</h2>
+            <ul>${topicList || '<li>Content will be added for this module soon.</li>'}</ul>
+          </div>
+        </article>
+      `;
+    }
 
     async function addModuleCheckIn(page, route) {
       if (!page.isModule) return;
@@ -202,8 +357,17 @@
     }
 
     async function renderPage() {
+      syncPageScrollLock();
+      if (!window.location.hash) {
+        const lastModuleRoute = localStorage.getItem('sap-btp-last-module-route');
+        if (contentPages[lastModuleRoute]?.isModule) {
+          window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${lastModuleRoute}`);
+        }
+      }
+
       const [route, anchorId] = (window.location.hash || '#stream-guide').split('/');
       const page = contentPages[route] || contentPages['#stream-guide'];
+      if (page.isModule) localStorage.setItem('sap-btp-last-module-route', route);
       document.title = `${page.title} | SAP BTP Integration Development`;
       content.innerHTML = '<p>Loading resources...</p>';
       content.classList.remove('stream-map-view');
@@ -221,6 +385,17 @@
           return;
         }
 
+        if (page.isGenerated) {
+          content.innerHTML = renderGeneratedModulePage(page);
+          if (page.isModule) {
+            window.learningAccount.recordVisit(page.feedbackId || route.slice(1))
+              .catch(() => window.learningAccount.setAccountNotice('Recent activity could not be saved.'));
+          }
+          await addModuleCheckIn(page, route);
+          restoreModuleScroll(route);
+          return;
+        }
+
         const response = await fetch(page.file);
         if (!response.ok) throw new Error(`Could not load ${page.file}`);
         const markdown = await response.text();
@@ -235,6 +410,7 @@
         await addModuleCheckIn(page, route);
         const anchor = anchorId && document.getElementById(decodeURIComponent(anchorId));
         if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        else if (page.isModule) restoreModuleScroll(route);
         else window.scrollTo(0, 0);
       } catch (error) {
         content.innerHTML = `<h1>Unable to load this page</h1><p>${error.message}</p>`;
@@ -245,13 +421,10 @@
       try {
         const { progress, activity } = await window.learningAccount.loadLearningOverview();
         const completedModules = new Set(progress.map((record) => record.module_id));
-        const moduleNames = {
-          'day-1': 'Day 1 · SAP Overview',
-          'day-2': 'Day 2 · SAP Discovery Resources',
-          'day-3': 'Day 3 · Learning Resources',
-          'day-4': 'Day 4 · Message Protocols',
-          'day-5': 'Day 5 · Introduction to SAP BTP'
-        };
+        const moduleNames = (window.SAP_BTP_STREAM_DATA || []).reduce((accumulator, day, index) => {
+          accumulator[`day-${index + 1}`] = `${day.day} · ${day.category}`;
+          return accumulator;
+        }, {});
         content.innerHTML = `
           <div class="learning-dashboard-heading">
             <p class="checkin-kicker">Your account</p>
@@ -307,11 +480,24 @@
       }
     }
 
+    let renderedAuthUserId = document.body.classList.contains('is-authenticated')
+      ? window.learningAccount.user?.id || null
+      : null;
+
     window.addEventListener('learningauthchange', (event) => {
-      if (event.detail.user) renderPage();
-      else content.innerHTML = '';
+      const userId = event.detail.user?.id || null;
+      if (userId) {
+        if (userId === renderedAuthUserId) return;
+        renderedAuthUserId = userId;
+        renderPage();
+      } else {
+        renderedAuthUserId = null;
+        content.innerHTML = '';
+      }
+      syncPageScrollLock();
     });
     window.addEventListener('hashchange', renderPage);
+    if (document.body.classList.contains('is-authenticated')) renderPage();
 
     menuButton.addEventListener('click', () => {
       const isOpen = sidebar.classList.toggle('is-open');
@@ -325,17 +511,33 @@
       }
     });
 
-    agreeButton.addEventListener('click', () => {
+    function dismissWelcome() {
       welcomeOverlay.classList.add('is-dismissed');
-      document.body.classList.remove('welcome-locked');
-    });
+      syncPageScrollLock();
+    }
+
+    function dismissAssessmentPopup() {
+      assessmentOverlay.classList.add('is-dismissed');
+      welcomeOverlay.classList.remove('is-dismissed');
+      syncPageScrollLock();
+    }
+
+    function syncPageScrollLock() {
+      const assessmentIsOpen = !assessmentOverlay.classList.contains('is-dismissed');
+      const welcomeIsOpen = !welcomeOverlay.classList.contains('is-dismissed');
+      document.body.classList.toggle('welcome-locked', assessmentIsOpen || welcomeIsOpen);
+    }
+
+    agreeButton.addEventListener('click', dismissWelcome);
+    closeWelcomeButton.addEventListener('click', dismissWelcome);
+    closeAssessmentButton.addEventListener('click', dismissAssessmentPopup);
 
     themeToggle.addEventListener('click', () => {
       const nextTheme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
       applyTheme(nextTheme);
     });
 
-    document.body.classList.add('welcome-locked');
+    syncPageScrollLock();
     const savedTheme = localStorage.getItem('sap-btp-theme') || 'light';
     applyTheme(savedTheme);
 
