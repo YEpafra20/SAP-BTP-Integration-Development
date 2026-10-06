@@ -38,6 +38,20 @@
     { day: "Day 36", date: "2026-11-23", category: "Capstone Project", topics: ["Capstone Project"] }
   ];
 
+  window.SAP_BTP_STREAM_DATA = trainingData;
+  window.SAP_BTP_DAY_MODULES = Object.fromEntries(trainingData.map((entry, index) => {
+    const moduleId = `day-${index + 1}`;
+    return [moduleId, {
+      moduleId,
+      title: `${entry.day} · ${entry.category}`,
+      summary: entry.topics.join(' • '),
+      topics: entry.topics,
+      date: entry.date,
+      category: entry.category,
+      day: entry.day
+    }];
+  }));
+
   function escapeHTML(value) {
     return String(value).replace(/[&<>"']/g, (character) => ({
       "&": "&amp;",
@@ -99,6 +113,13 @@
         <p class="map-kicker">SAP BTP Integration Development</p>
         <h1 id="map-title">Stream Map</h1>
         <p class="map-intro" id="map-intro"></p>
+      </section>
+      <section class="assessment-panel" aria-labelledby="assessment-title">
+        <div class="assessment-panel-heading">
+          <p class="map-kicker">Important dates</p>
+          <h2 id="assessment-title">Assessments and capstone</h2>
+        </div>
+        ${document.getElementById("assessment-schedule-template").innerHTML}
       </section>
       <section class="map-stats" aria-label="Training summary">
         <div><strong id="map-total-days"></strong><span>Training days (capstone included)</span></div>
@@ -169,7 +190,7 @@
       results.textContent = `${visibleDays.length} of ${trainingData.length} training days`;
       grid.innerHTML = visibleDays.length ? visibleDays.map(({ item, index }) => {
         const isCompleted = index < currentDayIndex;
-        const route = index < 5 ? `#day-${index + 1}` : "#stream-guide";
+        const route = `#day-${index + 1}`;
         return `
           <article class="map-day-card${index === selectedDay ? " is-selected" : ""}${isCompleted ? " is-complete" : ""}" data-day-index="${index}" aria-label="${escapeHTML(item.day)} training day">
             <div class="map-card-top">
