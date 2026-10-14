@@ -28,5 +28,3 @@
 - Managing certificates and keystore entries
 - Testing connectivity and validating trust relationships
 - Applying secure integration design practices in SAP Cloud Integration
-
-This module is best placed in its own folder with any screenshot or certificate-related assets stored under `day-wise/day-13/images/`.
