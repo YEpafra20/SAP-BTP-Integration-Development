@@ -648,5 +648,21 @@
     applyTheme(savedTheme);
 
   </script>
+  <script>
+    (function(w, d, s, botId) {
+      if (w.HelpJet && w.HelpJet.loaded) {
+        console.warn('HelpJet widget already loaded');
+        return;
+      }
+      var js = d.createElement(s);
+      js.async = true;
+      js.src = 'https://app.helpjet.com/api/widget/loader.js?botId=' + botId;
+      js.onerror = function() {
+        console.error('Failed to load HelpJet widget');
+      };
+      var fjs = d.getElementsByTagName(s)[0];
+      fjs.parentNode.insertBefore(js, fjs);
+    })(window, document, 'script', 'jh71mkfw9jxrw8nc273vt05cgd8g9gf1');
+  </script>
 </body>
 </html>
