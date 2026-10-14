@@ -386,10 +386,19 @@ body.is-authenticated .auth-gate { display: none; }
 .learning-dashboard-section { margin: 28px 0 38px; }
 .content .learning-dashboard-section h2 { margin: 0 0 12px; padding: 0 0 8px; border-bottom: 1px solid var(--line); font-size: 1.15rem; }
 .learning-progress-list,
+.learning-bookmark-list,
+.learning-quiz-list,
 .learning-activity-list { margin: 0; padding: 0; list-style: none; }
-.learning-progress-list li { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 48px; border-bottom: 1px solid var(--line); }
+.learning-progress-list li,
+.learning-bookmark-list li,
+.learning-quiz-list li { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 48px; border-bottom: 1px solid var(--line); }
 .learning-progress-list a { color: var(--blue-dark); font-size: 0.9rem; font-weight: 600; text-decoration: none; }
-.learning-progress-list a:hover { text-decoration: underline; }
+.learning-bookmark-list a,
+.learning-quiz-list a { color: var(--blue-dark); font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+.learning-progress-list a:hover,
+.learning-bookmark-list a:hover,
+.learning-quiz-list a:hover { text-decoration: underline; }
+.learning-quiz-list li > span { color: var(--muted); font-size: 0.82rem; }
 .learning-complete,
 .learning-incomplete { flex: 0 0 auto; color: var(--muted); font-size: 0.78rem; }
 .learning-complete { color: #147849; font-weight: 700; }
@@ -700,6 +709,19 @@ body.is-authenticated .auth-gate { display: none; }
 .module-checkin-copy > p:not(.checkin-kicker) { margin: 0 0 7px; color: var(--muted); font-size: 0.86rem; }
 .module-checkin-copy a { font-size: 0.86rem; }
 .module-checkin-actions { display: grid; justify-items: start; gap: 9px; flex: 0 0 auto; }
+.bookmark-button {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--ink);
+  background: var(--card-bg);
+  font: 600 0.84rem 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+.bookmark-button[aria-pressed='true'] { border-color: var(--pink); color: var(--pink); }
+.bookmark-button:disabled { opacity: 0.55; cursor: wait; }
+.bookmark-button:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
 .completion-button {
   min-height: 40px;
   padding: 8px 14px;
@@ -713,6 +735,21 @@ body.is-authenticated .auth-gate { display: none; }
 .completion-button[aria-pressed='true'] { border-color: var(--blue-dark); color: white; background: var(--blue-dark); }
 .completion-button:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
 .checkin-status { min-height: 1.4em; margin: 0; color: var(--muted); font-size: 0.76rem; }
+.module-quiz { margin: 30px 0 38px; padding: 24px; border: 1px solid var(--line); border-radius: 10px; background: var(--card-bg); }
+.content .module-quiz h2 { margin: 0 0 6px; padding: 0; border: 0; color: var(--ink); font-size: 1.25rem; }
+.module-quiz-intro,
+.module-quiz-status { margin: 0 0 16px; color: var(--muted); font-size: 0.86rem; }
+.module-quiz-question { margin: 18px 0; padding: 0; border: 0; }
+.module-quiz-question legend { margin-bottom: 9px; color: var(--ink); font-weight: 700; }
+.module-quiz-option { display: flex; align-items: flex-start; gap: 9px; margin: 8px 0; color: var(--ink); font-size: 0.9rem; cursor: pointer; }
+.module-quiz-option input { margin-top: 4px; accent-color: var(--blue); }
+.module-quiz-explanation { margin: 8px 0 0 24px; color: var(--muted); font-size: 0.82rem; }
+.module-quiz-submit,
+.module-quiz-retake { min-height: 40px; padding: 8px 15px; border: 0; border-radius: 5px; color: var(--button-text); background: var(--blue); font: 600 0.84rem 'DM Sans', sans-serif; cursor: pointer; }
+.module-quiz-submit:disabled { opacity: 0.55; cursor: wait; }
+.module-quiz-submit:focus-visible,
+.module-quiz-retake:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+.module-quiz-result { margin: 12px 0; color: var(--ink); font-weight: 700; }
 .module-feedback {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr);
@@ -1027,7 +1064,9 @@ body.is-authenticated .auth-gate { display: none; }
   .resource-external { display: inline-block; margin-top: 14px; }
   .module-checkin { align-items: flex-start; flex-direction: column; gap: 18px; margin-top: 46px; }
   .module-checkin-actions { width: 100%; }
-  .learning-progress-list li { align-items: flex-start; flex-direction: column; gap: 3px; padding: 10px 0; }
+  .learning-progress-list li,
+  .learning-bookmark-list li,
+  .learning-quiz-list li { align-items: flex-start; flex-direction: column; gap: 3px; padding: 10px 0; }
   .auth-gate { padding: 16px; }
   .auth-panel { padding: 25px 22px; }
   .module-feedback { grid-template-columns: 1fr; gap: 12px; }

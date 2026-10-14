@@ -251,8 +251,67 @@
     sessionStorage.setItem(visitKey, 'true');
   }
 
+  async function loadBookmarks() {
+    const { data, error } = await client
+      .from('user_module_bookmarks')
+      .select('module_id,created_at')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function setBookmark(moduleId, isBookmarked) {
+    if (!currentUser || !moduleIds.includes(moduleId)) throw new Error('Sign in to save modules.');
+    if (isBookmarked) {
+      const { error } = await client.from('user_module_bookmarks').upsert({
+        user_id: currentUser.id,
+        module_id: moduleId
+      }, { onConflict: 'user_id,module_id', ignoreDuplicates: true });
+      if (error) throw error;
+      return;
+    }
+
+    const { error } = await client
+      .from('user_module_bookmarks')
+      .delete()
+      .eq('user_id', currentUser.id)
+      .eq('module_id', moduleId);
+    if (error) throw error;
+  }
+
+  async function loadQuizAttempts(moduleId = null) {
+    let query = client
+      .from('user_module_quiz_attempts')
+      .select('module_id,score,question_count,attempted_at')
+      .eq('user_id', currentUser.id)
+      .order('attempted_at', { ascending: false });
+
+    if (moduleId) query = query.eq('module_id', moduleId).limit(20);
+    else query = query.limit(200);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function saveQuizAttempt(moduleId, score, questionCount) {
+    if (!currentUser || !moduleIds.includes(moduleId)) throw new Error('Sign in to save quiz scores.');
+    if (!Number.isInteger(score) || !Number.isInteger(questionCount) || questionCount < 1 || score < 0 || score > questionCount) {
+      throw new Error('The quiz score is invalid.');
+    }
+
+    const { error } = await client.from('user_module_quiz_attempts').insert({
+      user_id: currentUser.id,
+      module_id: moduleId,
+      score,
+      question_count: questionCount
+    });
+    if (error) throw error;
+  }
+
   async function loadLearningOverview() {
-    const [progressResult, activityResult] = await Promise.all([
+    const [progressResult, activityResult, bookmarks, quizAttempts] = await Promise.all([
       client.from('user_module_progress')
         .select('module_id,completed_at')
         .eq('user_id', currentUser.id)
@@ -261,12 +320,19 @@
         .select('module_id,visited_at')
         .eq('user_id', currentUser.id)
         .order('visited_at', { ascending: false })
-        .limit(20)
+        .limit(20),
+      loadBookmarks(),
+      loadQuizAttempts()
     ]);
 
     if (progressResult.error) throw progressResult.error;
     if (activityResult.error) throw activityResult.error;
-    return { progress: progressResult.data || [], activity: activityResult.data || [] };
+    return {
+      progress: progressResult.data || [],
+      activity: activityResult.data || [],
+      bookmarks,
+      quizAttempts
+    };
   }
 
   window.learningAccount = {
@@ -275,6 +341,10 @@
     getCompletion,
     setCompletion,
     recordVisit,
+    loadBookmarks,
+    setBookmark,
+    loadQuizAttempts,
+    saveQuizAttempt,
     loadLearningOverview,
     setAccountNotice
   };

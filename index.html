@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAP BTP Integration Development</title>
   <link rel="icon" type="image/png" href="sap.png">
-  <link rel="stylesheet" href="styles.css?v=assessment-popup-20261006">
+  <link rel="stylesheet" href="styles.css?v=quizzes-bookmarks-20261014">
 </head>
 <body>
   <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
@@ -156,6 +156,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="feedback.js"></script>
   <script src="learning-account.js"></script>
+  <script src="module-quizzes.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="stream-map.js"></script>
   <script>
@@ -320,6 +321,10 @@
       if (!page.isModule) return;
 
       const moduleId = page.feedbackId || route.slice(1);
+      const quiz = document.createElement('section');
+      window.initializeModuleQuiz(quiz, moduleId);
+      content.append(quiz);
+
       const checkIn = document.createElement('section');
       checkIn.className = 'module-checkin';
       checkIn.setAttribute('aria-labelledby', 'module-checkin-title');
@@ -327,16 +332,47 @@
         <div class="module-checkin-copy">
           <p class="checkin-kicker">Module progress</p>
           <h2 id="module-checkin-title">Mark this module complete</h2>
-          <p>Progress is saved in this browser.</p>
+          <p>Progress and bookmarks are saved to your account.</p>
         </div>
         <div class="module-checkin-actions">
+          <button class="bookmark-button" type="button" aria-pressed="false">Save for later</button>
           <button class="completion-button" type="button" aria-pressed="false">Mark complete</button>
+          <p class="bookmark-status checkin-status" aria-live="polite"></p>
           <p class="completion-status checkin-status" aria-live="polite"></p>
         </div>`;
       content.append(checkIn);
 
+      const bookmarkButton = checkIn.querySelector('.bookmark-button');
+      const bookmarkStatus = checkIn.querySelector('.bookmark-status');
       const completionButton = checkIn.querySelector('.completion-button');
       const completionStatus = checkIn.querySelector('.completion-status');
+
+      try {
+        const bookmarks = await window.learningAccount.loadBookmarks();
+        const isBookmarked = bookmarks.some((bookmark) => bookmark.module_id === moduleId);
+        bookmarkButton.setAttribute('aria-pressed', String(isBookmarked));
+        bookmarkButton.textContent = isBookmarked ? 'Saved for later' : 'Save for later';
+      } catch {
+        bookmarkButton.disabled = true;
+        bookmarkStatus.textContent = 'Bookmarks could not be loaded. Check the account database setup.';
+      }
+
+      bookmarkButton.addEventListener('click', async () => {
+        const nextBookmarked = bookmarkButton.getAttribute('aria-pressed') !== 'true';
+        bookmarkButton.disabled = true;
+        bookmarkStatus.textContent = 'Saving bookmark...';
+        try {
+          await window.learningAccount.setBookmark(moduleId, nextBookmarked);
+          bookmarkButton.setAttribute('aria-pressed', String(nextBookmarked));
+          bookmarkButton.textContent = nextBookmarked ? 'Saved for later' : 'Save for later';
+          bookmarkStatus.textContent = nextBookmarked ? 'Module saved to My Learning.' : 'Bookmark removed.';
+        } catch {
+          bookmarkStatus.textContent = 'Bookmark could not be saved. Check the account database setup.';
+        } finally {
+          bookmarkButton.disabled = false;
+        }
+      });
+
       let isComplete = false;
       try {
         isComplete = await window.learningAccount.getCompletion(moduleId);
@@ -429,7 +465,7 @@
 
     async function renderLearningDashboard() {
       try {
-        const { progress, activity } = await window.learningAccount.loadLearningOverview();
+        const { progress, activity, bookmarks, quizAttempts } = await window.learningAccount.loadLearningOverview();
         const completedModules = new Set(progress.map((record) => record.module_id));
         const moduleNames = (window.SAP_BTP_STREAM_DATA || []).reduce((accumulator, day, index) => {
           accumulator[`day-${index + 1}`] = `${day.day} · ${day.category}`;
@@ -449,6 +485,14 @@
           <section class="learning-dashboard-section" aria-labelledby="learning-progress-title">
             <h2 id="learning-progress-title">Module progress</h2>
             <ul class="learning-progress-list"></ul>
+          </section>
+          <section class="learning-dashboard-section" aria-labelledby="learning-bookmarks-title">
+            <h2 id="learning-bookmarks-title">Saved for later</h2>
+            <ul class="learning-bookmark-list"></ul>
+          </section>
+          <section class="learning-dashboard-section" aria-labelledby="learning-quiz-title">
+            <h2 id="learning-quiz-title">Recent quiz scores</h2>
+            <ul class="learning-quiz-list"></ul>
           </section>
           <section class="learning-dashboard-section" aria-labelledby="learning-activity-title">
             <h2 id="learning-activity-title">Recent activity</h2>
@@ -471,6 +515,58 @@
           item.append(link, state);
           progressList.append(item);
         });
+
+        const bookmarkList = content.querySelector('.learning-bookmark-list');
+        if (!bookmarks.length) {
+          const emptyState = document.createElement('li');
+          emptyState.textContent = 'Save a module to find it here later.';
+          bookmarkList.append(emptyState);
+        } else {
+          bookmarks.forEach((bookmark) => {
+            const item = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `#${bookmark.module_id}`;
+            link.textContent = moduleNames[bookmark.module_id] || 'Learning module';
+            item.append(link);
+            bookmarkList.append(item);
+          });
+        }
+
+        const quizList = content.querySelector('.learning-quiz-list');
+        const quizSummary = new Map();
+        quizAttempts.forEach((attempt) => {
+          const current = quizSummary.get(attempt.module_id) || {
+            bestRatio: -1,
+            bestScore: 0,
+            bestQuestionCount: attempt.question_count,
+            attempts: 0
+          };
+          const ratio = attempt.score / attempt.question_count;
+          if (ratio > current.bestRatio) {
+            current.bestRatio = ratio;
+            current.bestScore = attempt.score;
+            current.bestQuestionCount = attempt.question_count;
+          }
+          current.attempts += 1;
+          quizSummary.set(attempt.module_id, current);
+        });
+
+        if (!quizSummary.size) {
+          const emptyState = document.createElement('li');
+          emptyState.textContent = 'Your saved quiz scores will appear here.';
+          quizList.append(emptyState);
+        } else {
+          quizSummary.forEach((summary, moduleId) => {
+            const item = document.createElement('li');
+            const link = document.createElement('a');
+            const score = document.createElement('span');
+            link.href = `#${moduleId}`;
+            link.textContent = moduleNames[moduleId] || 'Learning module';
+            score.textContent = `Best recent: ${summary.bestScore}/${summary.bestQuestionCount} · ${summary.attempts} recent ${summary.attempts === 1 ? 'attempt' : 'attempts'}`;
+            item.append(link, score);
+            quizList.append(item);
+          });
+        }
 
         const activityList = content.querySelector('.learning-activity-list');
         if (!activity.length) {
