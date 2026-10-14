@@ -181,7 +181,3 @@
 ## Unit 16: Twitter Adapter
 
 - Resource: [Twitter Receiver Adapter](https://sapintegrationhub.blogspot.com/2019/05/twitter-receiver-adapter-in-scpi.html)
-
----
-
-Keep all screenshots for this module inside `day-wise/day-12/images/` and reference them in the content by number. This keeps the learning path clean and easy to follow.

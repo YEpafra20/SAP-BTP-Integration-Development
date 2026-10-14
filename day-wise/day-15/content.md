@@ -38,5 +38,3 @@
 - API exposure and consumption patterns
 - Security and policy enforcement
 - API documentation and pre-packaged content
-
-Set the API screenshots under `day-wise/day-15/images/` and keep the learning notes in this markdown file. This is the cleanest way for quick image placement and later review.

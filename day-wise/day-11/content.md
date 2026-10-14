@@ -102,5 +102,3 @@
 ![Image 23: API Artifacts](images/23.png)
 
 ---
-
-This file keeps the module content organized by unit and keeps the actual images in the same folder, so you can drop the screenshots into `day-wise/day-11/images/` without mixing them into the page content.

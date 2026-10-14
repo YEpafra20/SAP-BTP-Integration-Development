@@ -50,5 +50,3 @@
 - Watch video: [Transporting Package Part 3](https://studyatlkm.accenture.com/mod/h5pactivity/view.php?id=24727)
 
 ---
-
-Use the `day-wise/day-14/images/` folder for screenshots, monitoring dashboards, and transport screenshots. This folder keeps all monitoring and deployment visuals separate from the main module content.
