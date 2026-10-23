@@ -144,6 +144,7 @@
       <div class="sidebar-title">Learning Paths</div>
       <a class="nav-button" href="#stream-guide">Stream Guide</a>
       <a class="nav-button" href="#stream-details">Stream Details</a>
+      <a class="nav-button" href="#knowledge-base">SAP Integration Suite Guide</a>
       <div class="sidebar-title day-nav-title">Day Wise Resources</div>
       <a class="nav-button nav-subitem" href="#day-1">Day 1 · SAP Overview</a>
       <a class="nav-button nav-subitem" href="#scenario-examples">Scenario-Based Examples</a>
@@ -243,6 +244,7 @@
   <script src="stream-map.js"></script>
   <script>
     const content = document.getElementById('main-content');
+    const topbar = document.querySelector('.topbar');
     const menuButton = document.querySelector('.menu-button');
     const sidebar = document.querySelector('.sidebar');
     const searchButton = document.getElementById('search-button');
@@ -334,6 +336,7 @@
       '#stream-map': { title: 'Stream Map', isStreamMap: true },
       '#stream-guide': { file: 'stream-guide.md', title: 'Stream Guide' },
       '#stream-details': { file: 'stream-details.md', title: 'Stream Details' },
+      '#knowledge-base': { title: 'SAP Integration Suite Guide', file: 'SAP-Integration-Suite-Guide.pdf', isPdfViewer: true },
       '#my-learning': { title: 'My Learning', isDashboard: true },
       '#scenario-examples': { file: 'day-wise/scenario-examples/content.md', title: 'Scenario-Based Examples', imageDirectory: 'day-wise/scenario-examples/images/' },
       '#module-1': { file: 'day-wise/day-1/content.md', title: 'Day 1: SAP & BTP Fundamentals', imageDirectory: 'day-wise/day-1/images/', isModule: true, feedbackId: 'day-1' },
@@ -391,6 +394,88 @@
     });
 
     let learningSearchIndexPromise = null;
+    let loadingAnimationFrame = 0;
+
+    function stopLoadingAnimation() {
+      if (loadingAnimationFrame) {
+        window.cancelAnimationFrame(loadingAnimationFrame);
+        loadingAnimationFrame = 0;
+      }
+    }
+
+    function startLoadingAnimation(canvas) {
+      stopLoadingAnimation();
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Canvas is unavailable for the loading animation.');
+
+      const particles = Array.from({ length: 420 }, (_, index) => {
+        const y = 1 - (index / 419) * 2;
+        const radius = Math.sqrt(1 - y * y);
+        const angle = index * Math.PI * (3 - Math.sqrt(5));
+        return { x: Math.cos(angle) * radius, y, z: Math.sin(angle) * radius };
+      });
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function render(timestamp) {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        if (canvas.width !== Math.round(width * pixelRatio) || canvas.height !== Math.round(height * pixelRatio)) {
+          canvas.width = Math.round(width * pixelRatio);
+          canvas.height = Math.round(height * pixelRatio);
+        }
+        context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        context.clearRect(0, 0, width, height);
+
+        const phase = (timestamp / 1000) * Math.PI / 6;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const sphereRadius = Math.min(width, height) * 0.39;
+        const spin = phase;
+        const tilt = Math.sin(phase * 2) * 0.16 + 0.12;
+        const cosSpin = Math.cos(spin);
+        const sinSpin = Math.sin(spin);
+        const cosTilt = Math.cos(tilt);
+        const sinTilt = Math.sin(tilt);
+        const projected = particles.map((particle) => {
+          const wave = Math.sin(particle.x * 4 + phase) * Math.cos(particle.y * 3 - phase * 2);
+          const bulge = Math.sin(particle.z * 5 + particle.y * 3 + phase * 3) * 0.045;
+          const deform = 1 + wave * 0.055 + bulge;
+          const x = particle.x * deform;
+          const y = particle.y * deform;
+          const z = particle.z * deform;
+          const spunX = x * cosSpin - z * sinSpin;
+          const spunZ = x * sinSpin + z * cosSpin;
+          const tiltedY = y * cosTilt - spunZ * sinTilt;
+          const tiltedZ = y * sinTilt + spunZ * cosTilt;
+          const perspective = 1 + tiltedZ * 0.23;
+          return {
+            x: centerX + spunX * sphereRadius * perspective,
+            y: centerY + tiltedY * sphereRadius * perspective,
+            z: tiltedZ,
+            hue: 198 + ((particle.y + 1) / 2) * 75
+          };
+        }).sort((left, right) => left.z - right.z);
+
+        projected.forEach((point) => {
+          const depth = (point.z + 1) / 2;
+          const size = 0.65 + depth * 1.15;
+          const alpha = 0.2 + depth * 0.8;
+          context.fillStyle = `hsla(${point.hue}, 100%, 68%, ${alpha * 0.16})`;
+          context.beginPath();
+          context.arc(point.x, point.y, size * 3.5, 0, Math.PI * 2);
+          context.fill();
+          context.fillStyle = `hsla(${point.hue}, 100%, ${70 + depth * 20}%, ${alpha})`;
+          context.beginPath();
+          context.arc(point.x, point.y, size, 0, Math.PI * 2);
+          context.fill();
+        });
+
+        if (!reducedMotion) loadingAnimationFrame = window.requestAnimationFrame(render);
+      }
+
+      render(0);
+    }
 
     function buildLearningSearchIndex() {
       if (learningSearchIndexPromise) return learningSearchIndexPromise;
@@ -472,8 +557,22 @@
 
     const moduleScrollKeyPrefix = 'sap-btp-module-scroll:';
     let scheduledScrollSave = null;
+    let lastHeaderScrollY = window.scrollY;
 
     window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastHeaderScrollY;
+      const headerHeight = topbar.offsetHeight;
+
+      if (currentScrollY <= 24) {
+        document.body.classList.remove('header-hidden');
+      } else if (scrollDelta > 8 && currentScrollY > headerHeight + 20) {
+        document.body.classList.add('header-hidden');
+      } else if (scrollDelta < -8) {
+        document.body.classList.remove('header-hidden');
+      }
+      lastHeaderScrollY = currentScrollY;
+
       const route = window.location.hash.split('/')[0];
       if (!contentPages[route]?.isModule) return;
 
@@ -561,9 +660,10 @@
       if (!page.isModule) return;
 
       const moduleId = page.feedbackId || route.slice(1);
+      const moduleContent = content.querySelector('.day-content-frame') || content;
       const quiz = document.createElement('section');
       window.initializeModuleQuiz(quiz, moduleId);
-      content.append(quiz);
+      moduleContent.append(quiz);
 
       const checkIn = document.createElement('section');
       checkIn.className = 'module-checkin';
@@ -580,7 +680,7 @@
           <p class="bookmark-status checkin-status" aria-live="polite"></p>
           <p class="completion-status checkin-status" aria-live="polite"></p>
         </div>`;
-      content.append(checkIn);
+      moduleContent.append(checkIn);
 
       const bookmarkButton = checkIn.querySelector('.bookmark-button');
       const bookmarkStatus = checkIn.querySelector('.bookmark-status');
@@ -668,6 +768,7 @@
     }
 
     async function renderPage() {
+      stopLoadingAnimation();
       syncPageScrollLock();
       const [route, anchorId] = (window.location.hash || '#my-learning').split('/');
       const page = contentPages[route] || contentPages['#my-learning'];
@@ -677,11 +778,18 @@
         else link.removeAttribute('aria-current');
       });
       document.title = `${page.title} | SAP BTP Integration Development`;
-      content.innerHTML = '<p>Loading resources...</p>';
+      content.setAttribute('aria-busy', 'true');
+      content.innerHTML = `
+        <div class="site-loading" role="status">
+          <canvas class="site-loading-canvas" width="192" height="192" aria-hidden="true"></canvas>
+          <span>Loading your learning content...</span>
+        </div>`;
       content.classList.remove('stream-map-view');
       content.classList.remove('learning-dashboard-view');
+      content.classList.toggle('day-module-view', Boolean(page.isModule));
 
       try {
+        startLoadingAnimation(content.querySelector('.site-loading-canvas'));
         if (page.isDashboard) {
           await renderLearningDashboard();
           window.scrollTo(0, 0);
@@ -694,8 +802,37 @@
           return;
         }
 
+        if (page.isPdfViewer) {
+          content.innerHTML = `
+            <article class="pdf-viewer-shell" aria-label="${escapeHtml(page.title)} PDF viewer">
+              <div class="pdf-viewer-toolbar" aria-hidden="true">
+                <div class="pdf-toolbar-section pdf-toolbar-left">
+                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Open file">▣</button>
+                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Share">↗</button>
+                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Download">↓</button>
+                </div>
+                <div class="pdf-toolbar-center">
+                  <span class="pdf-toolbar-label">Page Count:</span>
+                  <span class="pdf-toolbar-counter">1</span>
+                  <span class="pdf-toolbar-divider">of 51</span>
+                  <button class="pdf-toolbar-button pdf-toolbar-small" type="button" aria-label="Zoom out">−</button>
+                  <button class="pdf-toolbar-button pdf-toolbar-small" type="button" aria-label="Zoom in">+</button>
+                  <span class="pdf-toolbar-label">Page Width</span>
+                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Fit to page">⌂</button>
+                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Open in new window">↗</button>
+                </div>
+              </div>
+              <div class="pdf-viewer-surface">
+                <iframe class="pdf-viewer-frame" src="${page.file}" title="${escapeHtml(page.title)}"></iframe>
+              </div>
+            </article>
+          `;
+          window.scrollTo(0, 0);
+          return;
+        }
+
         if (page.isGenerated) {
-          content.innerHTML = renderGeneratedModulePage(page);
+          content.innerHTML = `<div class="day-content-frame">${renderGeneratedModulePage(page)}</div>`;
           if (page.isModule) {
             window.learningAccount.recordVisit(page.feedbackId || route.slice(1))
               .catch(() => window.learningAccount.setAccountNotice('Recent activity could not be saved.'));
@@ -709,9 +846,12 @@
         if (!response.ok) throw new Error(`Could not load ${page.file}`);
         const markdown = await response.text();
         const renderedContent = marked.parse(markdown);
-        content.innerHTML = page.imageDirectory
+        const pageContent = page.imageDirectory
           ? renderedContent.replace(/(src=["'])images\//g, `$1${page.imageDirectory}`)
           : renderedContent;
+        content.innerHTML = page.isModule
+          ? `<div class="day-content-frame">${pageContent}</div>`
+          : pageContent;
         if (page.isModule) {
           window.learningAccount.recordVisit(page.feedbackId || route.slice(1))
             .catch(() => window.learningAccount.setAccountNotice('Recent activity could not be saved.'));
@@ -723,6 +863,8 @@
         else window.scrollTo(0, 0);
       } catch (error) {
         content.innerHTML = `<h1>Unable to load this page</h1><p>${error.message}</p>`;
+      } finally {
+        content.setAttribute('aria-busy', 'false');
       }
     }
 
