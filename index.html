@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAP BTP Integration Development</title>
   <link rel="icon" type="image/png" href="sap.png">
-  <link rel="stylesheet" href="styles.css?v=quizzes-bookmarks-20261014">
+  <link rel="stylesheet" href="styles.css?v=dashboard-color-refresh-20261023">
 </head>
 <body>
   <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
@@ -69,17 +69,75 @@
     </div>
   </section>
   <div class="site-shell">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="topbar">
-      <a class="brand" href="#stream-guide">SAP BTP Integration Development</a>
+      <a class="brand" href="#my-learning">SAP BTP Integration Development</a>
       <a class="stream-map-notice" href="#stream-map" aria-label="Open Stream Map">Stream Map</a>
       <nav class="top-actions" aria-label="Page controls">
+        <div class="search-control">
+          <button id="search-button" class="search-button" type="button" aria-label="Search learning content" aria-keyshortcuts="Control+K Meta+K" aria-expanded="false" aria-controls="content-search-panel">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none">
+              <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="2"></circle>
+              <path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <span>Search</span>
+          </button>
+          <section id="content-search-panel" class="content-search-panel" aria-label="Search learning content" hidden>
+            <form id="content-search-form" role="search">
+              <label for="content-search-input">Search lessons and resources</label>
+              <div class="content-search-controls">
+                <input id="content-search-input" type="search" placeholder="Try “API Management”" autocomplete="off" aria-describedby="content-search-help content-search-status">
+                <button id="close-search-button" class="close-search-button" type="button" aria-label="Close search">×</button>
+              </div>
+              <p id="content-search-help" class="content-search-help">Search lesson titles and content. Press Ctrl+K or ⌘K anytime.</p>
+            </form>
+            <p id="content-search-status" class="content-search-status" role="status" aria-live="polite"></p>
+            <ul id="content-search-results" class="content-search-results" aria-label="Search results"></ul>
+          </section>
+        </div>
+        <a class="home-button" href="#my-learning" title="Go to learning dashboard">Home</a>
+        <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
         <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Turn dark mode on" aria-pressed="false">
           <span class="theme-toggle-icon theme-toggle-sun" aria-hidden="true">☼</span>
           <span class="theme-toggle-switch" aria-hidden="true"></span>
           <span class="theme-toggle-icon theme-toggle-moon" aria-hidden="true">☾</span>
         </button>
-        <a class="home-button" href="#stream-guide" title="Go to stream guide">Home</a>
-        <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
+        <div class="profile-control">
+          <button id="profile-button" class="profile-button" type="button" aria-label="Open profile menu" aria-expanded="false" aria-controls="profile-menu">
+            <span class="profile-avatar" aria-hidden="true">
+              <img id="profile-avatar-image" alt="" hidden>
+              <span id="profile-avatar">U</span>
+            </span>
+          </button>
+          <div id="profile-menu" class="profile-menu" hidden>
+            <div class="profile-menu-identity">
+              <span class="profile-avatar profile-menu-avatar" aria-hidden="true">
+                <img id="profile-menu-avatar-image" alt="" hidden>
+                <span id="profile-menu-avatar">U</span>
+              </span>
+              <div class="profile-menu-user">
+                <p id="account-name" class="account-name" hidden></p>
+                <p id="account-email" class="account-email"></p>
+              </div>
+            </div>
+            <div class="profile-photo-actions">
+              <button id="change-profile-photo" class="profile-secondary-button" type="button">Change photo</button>
+              <button id="remove-profile-photo" class="profile-secondary-button" type="button" hidden>Remove photo</button>
+              <input id="profile-photo-input" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+              <p class="profile-photo-note">Photo is saved in this browser only.</p>
+            </div>
+            <form id="profile-name-form" class="profile-name-form">
+              <label for="profile-name-input">Display name</label>
+              <div class="profile-name-controls">
+                <input id="profile-name-input" name="full_name" type="text" maxlength="120" autocomplete="name" required>
+                <button class="profile-save-button" type="submit">Save</button>
+              </div>
+            </form>
+            <a class="profile-learning-link" href="#my-learning">My Learning</a>
+            <p id="account-notice" class="account-notice" aria-live="polite"></p>
+            <button id="sign-out-button" class="sign-out-button" type="button" hidden>Sign out</button>
+          </div>
+        </div>
       </nav>
     </header>
     <aside class="sidebar" aria-label="Guide navigation">
@@ -103,17 +161,41 @@
       <a class="nav-button nav-subitem" href="#day-13">Day 13 · Cloud Integration Security</a>
       <a class="nav-button nav-subitem" href="#day-14">Day 14 · Monitoring and Transport</a>
       <a class="nav-button nav-subitem" href="#day-15">Day 15 · API Management Overview</a>
-      <a class="community-link" href="https://chat.whatsapp.com/Bgff8re9UIQK4b1Z1ij0U6" target="_blank"
-        rel="noopener noreferrer">Get updates on WhatsApp</a>
-      <div class="sidebar-account">
-        <p id="account-name" class="account-name" hidden></p>
-        <p id="account-email" class="account-email"></p>
-        <a class="nav-button" href="#my-learning">My Learning</a>
-        <p id="account-notice" class="account-notice" aria-live="polite"></p>
-        <button id="sign-out-button" class="sign-out-button" type="button" hidden>Sign out</button>
-      </div>
+      <a class="nav-button nav-subitem" href="#day-16">Day 16 · Revision and Assessment</a>
+      <a class="nav-button nav-subitem" href="#day-17">Day 17 · MCQ 1 and SuccessFactors</a>
+      <a class="nav-button nav-subitem" href="#day-18">Day 18 · AMQP Connectivity</a>
+      <a class="nav-button nav-subitem" href="#day-19">Day 19 · Open Connectors and Messaging</a>
+      <a class="nav-button nav-subitem" href="#day-20">Day 20 · Security, Monitoring and Transport</a>
+      <a class="nav-button nav-subitem" href="#day-21">Day 21 · Revision and Assessment</a>
+      <a class="nav-button nav-subitem" href="#day-22">Day 22 · Develop APIs</a>
+      <a class="nav-button nav-subitem" href="#day-23">Day 23 · Develop APIs</a>
+      <a class="nav-button nav-subitem" href="#day-24">Day 24 · Products and Policies</a>
+      <a class="nav-button nav-subitem" href="#day-25">Day 25 · API Management Policies</a>
+      <a class="nav-button nav-subitem" href="#day-26">Day 26 · Revision and Assessment</a>
+      <a class="nav-button nav-subitem" href="#day-27">Day 27 · SAP Open Connectors</a>
+      <a class="nav-button nav-subitem" href="#day-28">Day 28 · PI/PO and Additional Topics</a>
+      <a class="nav-button nav-subitem" href="#day-29">Day 29 · SAP Integration Suite Migration</a>
+      <a class="nav-button nav-subitem" href="#day-30">Day 30 · MCQ 2</a>
+      <a class="nav-button nav-subitem" href="#day-31">Day 31 · Revision and Assessment</a>
+      <a class="nav-button nav-subitem" href="#day-32">Day 32 · Capstone Project</a>
+      <a class="nav-button nav-subitem" href="#day-33">Day 33 · Capstone Project</a>
+      <a class="nav-button nav-subitem" href="#day-34">Day 34 · Capstone Project</a>
+      <a class="nav-button nav-subitem" href="#day-35">Day 35 · Capstone Project</a>
+      <a class="nav-button nav-subitem" href="#day-36">Day 36 · Capstone Project</a>
     </aside>
-    <main id="main-content" class="content"></main>
+    <main id="main-content" class="content" tabindex="-1"></main>
+    <footer class="site-footer">
+      <div class="site-footer-content">
+        <p class="site-footer-brand">SAP BTP Integration Development</p>
+        <p class="site-footer-note">A community learning resource. Not an official SAP website.</p>
+        <nav class="site-footer-links" aria-label="Footer navigation">
+          <a href="#stream-guide">Stream Guide</a>
+          <a href="#stream-map">Stream Map</a>
+          <a href="#my-learning">My Learning</a>
+        </nav>
+        <p class="site-footer-copyright">&copy; 2026 Community learning resource</p>
+      </div>
+    </footer>
   </div>
   <template id="assessment-schedule-template">
     <div class="assessment-table-wrap" role="region" aria-label="Assessment schedule" tabindex="0">
@@ -155,7 +237,7 @@
   <script src="feedback-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="feedback.js"></script>
-  <script src="learning-account.js"></script>
+  <script src="learning-account.js?v=learner-status-summary-20261023"></script>
   <script src="module-quizzes.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="stream-map.js"></script>
@@ -163,6 +245,25 @@
     const content = document.getElementById('main-content');
     const menuButton = document.querySelector('.menu-button');
     const sidebar = document.querySelector('.sidebar');
+    const searchButton = document.getElementById('search-button');
+    const searchPanel = document.getElementById('content-search-panel');
+    const searchInput = document.getElementById('content-search-input');
+    const searchResults = document.getElementById('content-search-results');
+    const searchStatus = document.getElementById('content-search-status');
+    const profileButton = document.getElementById('profile-button');
+    const profileMenu = document.getElementById('profile-menu');
+    const profilePhotoInput = document.getElementById('profile-photo-input');
+    const profilePhotoImages = [
+      document.getElementById('profile-avatar-image'),
+      document.getElementById('profile-menu-avatar-image')
+    ];
+    const profileInitials = [
+      document.getElementById('profile-avatar'),
+      document.getElementById('profile-menu-avatar')
+    ];
+    const removeProfilePhotoButton = document.getElementById('remove-profile-photo');
+    const profileNameForm = document.getElementById('profile-name-form');
+    const profileNameInput = document.getElementById('profile-name-input');
     const welcomeOverlay = document.querySelector('.welcome-overlay');
     const assessmentOverlay = document.querySelector('.assessment-overlay');
     const agreeButton = document.querySelector('.agree-button');
@@ -190,6 +291,45 @@
       }[character]));
     }
 
+    function setProfilePhoto(photo) {
+      profilePhotoImages.forEach((image, index) => {
+        image.hidden = !photo;
+        if (photo) image.src = photo;
+        profileInitials[index].hidden = Boolean(photo);
+      });
+      removeProfilePhotoButton.hidden = !photo;
+    }
+
+    function profilePhotoStorageKey(userId) {
+      return `sap-btp-profile-photo-${userId}`;
+    }
+
+    async function resizeProfilePhoto(file) {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        throw new Error('Choose a JPEG, PNG, or WebP image.');
+      }
+      if (file.size > 5 * 1024 * 1024) throw new Error('Choose an image smaller than 5 MB.');
+
+      const bitmap = await createImageBitmap(file);
+      if (bitmap.width * bitmap.height > 30000000) {
+        bitmap.close();
+        throw new Error('This image has too many pixels. Choose a smaller image.');
+      }
+
+      const scale = Math.min(1, 384 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d');
+      if (!context) {
+        bitmap.close();
+        throw new Error('Your browser could not process this image.');
+      }
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+      return canvas.toDataURL('image/jpeg', 0.82);
+    }
+
     const contentPages = {
       '#stream-map': { title: 'Stream Map', isStreamMap: true },
       '#stream-guide': { file: 'stream-guide.md', title: 'Stream Guide' },
@@ -211,7 +351,27 @@
       '#day-12': { file: 'day-wise/day-12/content.md', title: 'Day 12: SAP Cloud Integration Connectivity Options', imageDirectory: 'day-wise/day-12/images/', isModule: true, feedbackId: 'day-12' },
       '#day-13': { file: 'day-wise/day-13/content.md', title: 'Day 13: SAP Cloud Integration Security Aspects', imageDirectory: 'day-wise/day-13/images/', isModule: true, feedbackId: 'day-13' },
       '#day-14': { file: 'day-wise/day-14/content.md', title: 'Day 14: SAP Cloud Integration Monitoring and Transport Options', imageDirectory: 'day-wise/day-14/images/', isModule: true, feedbackId: 'day-14' },
-      '#day-15': { file: 'day-wise/day-15/content.md', title: 'Day 15: SAP API Management Overview', imageDirectory: 'day-wise/day-15/images/', isModule: true, feedbackId: 'day-15' }
+      '#day-15': { file: 'day-wise/day-15/content.md', title: 'Day 15: SAP API Management Overview', imageDirectory: 'day-wise/day-15/images/', isModule: true, feedbackId: 'day-15' },
+      '#day-16': { file: 'day-wise/day-16/content.md', title: 'Day 16: Revision and Hands-on Assessment', imageDirectory: 'day-wise/day-16/images/', isModule: true, feedbackId: 'day-16' },
+      '#day-17': { file: 'day-wise/day-17/content.md', title: 'Day 17: MCQ 1 and SuccessFactors Connectivity', imageDirectory: 'day-wise/day-17/images/', isModule: true, feedbackId: 'day-17' },
+      '#day-18': { file: 'day-wise/day-18/content.md', title: 'Day 18: AMQP Connectivity', imageDirectory: 'day-wise/day-18/images/', isModule: true, feedbackId: 'day-18' },
+      '#day-19': { file: 'day-wise/day-19/content.md', title: 'Day 19: Open Connectors and Messaging', imageDirectory: 'day-wise/day-19/images/', isModule: true, feedbackId: 'day-19' },
+      '#day-20': { file: 'day-wise/day-20/content.md', title: 'Day 20: Security, Monitoring and Transport', imageDirectory: 'day-wise/day-20/images/', isModule: true, feedbackId: 'day-20' },
+      '#day-21': { file: 'day-wise/day-21/content.md', title: 'Day 21: Revision and Hands-on Assessment', imageDirectory: 'day-wise/day-21/images/', isModule: true, feedbackId: 'day-21' },
+      '#day-22': { file: 'day-wise/day-22/content.md', title: 'Day 22: SAP API Management - Develop API', imageDirectory: 'day-wise/day-22/images/', isModule: true, feedbackId: 'day-22' },
+      '#day-23': { file: 'day-wise/day-23/content.md', title: 'Day 23: SAP API Management - Develop API', imageDirectory: 'day-wise/day-23/images/', isModule: true, feedbackId: 'day-23' },
+      '#day-24': { file: 'day-wise/day-24/content.md', title: 'Day 24: Products and API Management Policies', imageDirectory: 'day-wise/day-24/images/', isModule: true, feedbackId: 'day-24' },
+      '#day-25': { file: 'day-wise/day-25/content.md', title: 'Day 25: API Management Policies, Monitoring and Monetization', imageDirectory: 'day-wise/day-25/images/', isModule: true, feedbackId: 'day-25' },
+      '#day-27': { file: 'day-wise/day-27/content.md', title: 'Day 27: SAP Open Connectors', imageDirectory: 'day-wise/day-27/images/', isModule: true, feedbackId: 'day-27' },
+      '#day-28': { file: 'day-wise/day-28/content.md', title: 'Day 28: PI/PO and Additional Topics', imageDirectory: 'day-wise/day-28/images/', isModule: true, feedbackId: 'day-28' },
+      '#day-29': { file: 'day-wise/day-29/content.md', title: 'Day 29: SAP PO to SAP Integration Suite Migration', imageDirectory: 'day-wise/day-29/images/', isModule: true, feedbackId: 'day-29' },
+      '#day-30': { file: 'day-wise/day-30/content.md', title: 'Day 30: MCQ 2', imageDirectory: 'day-wise/day-30/images/', isModule: true, feedbackId: 'day-30' },
+      '#day-31': { file: 'day-wise/day-31/content.md', title: 'Day 31: Revision and Hands-on Assessment', imageDirectory: 'day-wise/day-31/images/', isModule: true, feedbackId: 'day-31' },
+      '#day-32': { file: 'day-wise/day-32/content.md', title: 'Day 32: Capstone Project', imageDirectory: 'day-wise/day-32/images/', isModule: true, feedbackId: 'day-32' },
+      '#day-33': { file: 'day-wise/day-33/content.md', title: 'Day 33: Capstone Project', imageDirectory: 'day-wise/day-33/images/', isModule: true, feedbackId: 'day-33' },
+      '#day-34': { file: 'day-wise/day-34/content.md', title: 'Day 34: Capstone Project', imageDirectory: 'day-wise/day-34/images/', isModule: true, feedbackId: 'day-34' },
+      '#day-35': { file: 'day-wise/day-35/content.md', title: 'Day 35: Capstone Project', imageDirectory: 'day-wise/day-35/images/', isModule: true, feedbackId: 'day-35' },
+      '#day-36': { file: 'day-wise/day-36/content.md', title: 'Day 36: Capstone Project', imageDirectory: 'day-wise/day-36/images/', isModule: true, feedbackId: 'day-36' }
     };
 
     const scheduledModules = window.SAP_BTP_STREAM_DATA || [];
@@ -229,6 +389,86 @@
         };
       }
     });
+
+    let learningSearchIndexPromise = null;
+
+    function buildLearningSearchIndex() {
+      if (learningSearchIndexPromise) return learningSearchIndexPromise;
+
+      const pages = Object.entries(contentPages)
+        .filter(([route, page]) => route !== '#my-learning' && route !== '#stream-map' && (page.file || page.isGenerated))
+        .filter(([, page], index, allPages) => allPages.findIndex(([, candidate]) =>
+          (candidate.feedbackId || candidate.file || candidate.title) === (page.feedbackId || page.file || page.title)
+        ) === index);
+
+      learningSearchIndexPromise = Promise.all(pages.map(async ([route, page]) => {
+        let text = '';
+        if (page.file) {
+          const response = await fetch(page.file);
+          if (!response.ok) throw new Error(`Could not load ${page.file}`);
+          const markdown = await response.text();
+          const parsed = new DOMParser().parseFromString(marked.parse(markdown), 'text/html');
+          text = parsed.body.textContent || '';
+        } else {
+          const moduleInfo = window.SAP_BTP_DAY_MODULES?.[page.feedbackId];
+          text = (moduleInfo?.topics || page.moduleTopics || []).join(' ');
+        }
+        return { route, title: page.title, text, searchable: `${page.title} ${text}`.toLocaleLowerCase() };
+      }));
+
+      return learningSearchIndexPromise;
+    }
+
+    function renderLearningSearchResults(index, query) {
+      const terms = query.toLocaleLowerCase().split(/\s+/).filter(Boolean);
+      searchResults.replaceChildren();
+      if (!terms.length) {
+        searchStatus.textContent = 'Enter a topic, tool, or day to search.';
+        return;
+      }
+
+      const matches = index.map((document) => {
+        if (!terms.every((term) => document.searchable.includes(term))) return null;
+        const title = document.title.toLocaleLowerCase();
+        const score = terms.reduce((total, term) => total + (title.includes(term) ? 3 : 0), 0);
+        const firstMatch = document.text.toLocaleLowerCase().indexOf(terms.find((term) => document.text.toLocaleLowerCase().includes(term)) || '');
+        const start = firstMatch > 48 ? firstMatch - 48 : 0;
+        const snippet = document.text.slice(start, start + 120).replace(/\s+/g, ' ').trim();
+        return { ...document, score, snippet: `${start ? '…' : ''}${snippet}${start + 120 < document.text.length ? '…' : ''}` };
+      }).filter(Boolean).sort((left, right) => right.score - left.score || left.title.localeCompare(right.title));
+
+      if (!matches.length) {
+        searchStatus.textContent = 'No matching lessons found. Try different keywords.';
+        return;
+      }
+
+      const shownMatches = matches.slice(0, 10);
+      searchStatus.textContent = `${matches.length} ${matches.length === 1 ? 'lesson' : 'lessons'} found${matches.length > shownMatches.length ? ` · showing ${shownMatches.length}` : ''}.`;
+      shownMatches.forEach((match) => {
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        const title = document.createElement('strong');
+        const snippet = document.createElement('span');
+        link.href = match.route;
+        title.textContent = match.title;
+        snippet.textContent = match.snippet || 'Open this learning resource.';
+        link.append(title, snippet);
+        item.append(link);
+        searchResults.append(item);
+      });
+    }
+
+    async function searchLearningContent() {
+      if (!learningSearchIndexPromise) searchStatus.textContent = 'Loading searchable learning content…';
+      try {
+        const index = await buildLearningSearchIndex();
+        renderLearningSearchResults(index, searchInput.value);
+      } catch {
+        learningSearchIndexPromise = null;
+        searchResults.replaceChildren();
+        searchStatus.textContent = 'Search content could not be loaded. Check your connection and try again.';
+      }
+    }
 
     const moduleScrollKeyPrefix = 'sap-btp-module-scroll:';
     let scheduledScrollSave = null;
@@ -389,6 +629,11 @@
           await window.learningAccount.setCompletion(moduleId, nextComplete);
           completionButton.setAttribute('aria-pressed', String(nextComplete));
           completionButton.textContent = nextComplete ? 'Completed' : 'Mark complete';
+          const sidebarLink = sidebar.querySelector(`.nav-subitem[href="#${moduleId}"]`);
+          if (sidebarLink) {
+            if (nextComplete) sidebarLink.dataset.completed = 'true';
+            else delete sidebarLink.dataset.completed;
+          }
           completionStatus.textContent = nextComplete
             ? 'Module progress saved to your account.'
             : 'Module marked as not complete.';
@@ -402,21 +647,39 @@
       window.initializeModuleFeedback(checkIn, page.feedbackId || moduleId);
     }
 
-    async function renderPage() {
-      syncPageScrollLock();
-      if (!window.location.hash) {
-        const lastModuleRoute = localStorage.getItem('sap-btp-last-module-route');
-        if (contentPages[lastModuleRoute]?.isModule) {
-          window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${lastModuleRoute}`);
-        }
+    async function refreshSidebarCompletionIndicators(userId) {
+      const dayLinks = sidebar.querySelectorAll('.nav-subitem[href^="#day-"]');
+      if (!userId) {
+        dayLinks.forEach((link) => delete link.dataset.completed);
+        return;
       }
 
-      const [route, anchorId] = (window.location.hash || '#stream-guide').split('/');
-      const page = contentPages[route] || contentPages['#stream-guide'];
-      if (page.isModule) localStorage.setItem('sap-btp-last-module-route', route);
+      try {
+        const completedModules = await window.learningAccount.loadCompletions();
+        if (window.learningAccount.user?.id !== userId) return;
+        dayLinks.forEach((link) => {
+          const moduleId = link.getAttribute('href').slice(1);
+          if (completedModules.has(moduleId)) link.dataset.completed = 'true';
+          else delete link.dataset.completed;
+        });
+      } catch {
+        window.learningAccount.setAccountNotice('Module progress could not be loaded. Check the account database setup.');
+      }
+    }
+
+    async function renderPage() {
+      syncPageScrollLock();
+      const [route, anchorId] = (window.location.hash || '#my-learning').split('/');
+      const page = contentPages[route] || contentPages['#my-learning'];
+      sidebar.querySelectorAll('.nav-button[href^="#"]').forEach((link) => {
+        const linkRoute = link.getAttribute('href').split('/')[0];
+        if (linkRoute === route) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
       document.title = `${page.title} | SAP BTP Integration Development`;
       content.innerHTML = '<p>Loading resources...</p>';
       content.classList.remove('stream-map-view');
+      content.classList.remove('learning-dashboard-view');
 
       try {
         if (page.isDashboard) {
@@ -463,6 +726,132 @@
       }
     }
 
+    async function renderCommunityDashboard(container) {
+      const results = container.querySelector('.community-dashboard-results');
+      const refreshButton = container.querySelector('.community-refresh-button');
+
+      function learnerDashboardErrorMessage(error) {
+        const code = error?.code ? ` (${error.code})` : '';
+        if (error?.code === '42501') {
+          return 'Supabase denied access to the learner summary. Check the authenticated RPC grant in supabase-progress-sharing.sql.';
+        }
+        if (error?.code === 'PGRST202') {
+          return 'Supabase cannot find get_learner_progress_summary. Run the updated supabase-progress-sharing.sql in the project used by feedback-config.js, then refresh this page.';
+        }
+        return `Learner status could not be loaded${code}.${error?.message ? ` ${error.message}` : ' Check the Supabase project and try again.'}`;
+      }
+
+      async function refresh() {
+        results.replaceChildren();
+        const loading = document.createElement('p');
+        loading.className = 'community-dashboard-status';
+        loading.textContent = 'Loading learner status...';
+        results.append(loading);
+        refreshButton.disabled = true;
+
+        try {
+          const learners = await window.learningAccount.loadLearnerProgressSummary();
+          if (!container.isConnected) return;
+          renderCommunityLearners(results, learners);
+        } catch (error) {
+          if (!container.isConnected) return;
+          const message = document.createElement('p');
+          message.className = 'community-dashboard-status community-dashboard-error';
+          message.textContent = learnerDashboardErrorMessage(error);
+          results.replaceChildren(message);
+        } finally {
+          refreshButton.disabled = false;
+        }
+      }
+
+      refreshButton.addEventListener('click', () => { void refresh(); });
+      await refresh();
+    }
+
+    function renderCommunityLearners(container, learners) {
+      const totalModules = 36;
+      const validLearners = learners.map((learner) => {
+        const completedCount = Number(learner.completed_count);
+        return {
+          displayName: learner.display_name || 'Learner',
+          completedCount: Number.isFinite(completedCount)
+            ? Math.min(totalModules, Math.max(0, Math.trunc(completedCount)))
+            : 0,
+          lastCompletedAt: learner.last_completed_at
+        };
+      });
+      const totalCompletions = validLearners.reduce((total, learner) => total + learner.completedCount, 0);
+      const averageCompletion = validLearners.length
+        ? Math.round(totalCompletions / (validLearners.length * totalModules) * 100)
+        : 0;
+      const metrics = document.createElement('div');
+      metrics.className = 'community-metrics';
+      [
+        ['Learners', String(validLearners.length)],
+        ['Modules completed', String(totalCompletions)],
+        ['Average completion', `${averageCompletion}%`]
+      ].forEach(([label, value]) => {
+        const card = document.createElement('article');
+        card.className = 'community-metric-card';
+        const valueElement = document.createElement('strong');
+        const labelElement = document.createElement('span');
+        valueElement.textContent = value;
+        labelElement.textContent = label;
+        card.append(valueElement, labelElement);
+        metrics.append(card);
+      });
+
+      const tableWrap = document.createElement('div');
+      tableWrap.className = 'community-learner-table-wrap';
+      const table = document.createElement('table');
+      table.className = 'community-learner-table';
+      const caption = document.createElement('caption');
+      caption.textContent = 'Learner completion summaries visible to signed-in users';
+      const head = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      ['Learner', 'Completed', 'Progress', 'Last completed'].forEach((heading) => {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        th.textContent = heading;
+        headerRow.append(th);
+      });
+      head.append(headerRow);
+      const body = document.createElement('tbody');
+      validLearners.forEach((learner) => {
+        const row = document.createElement('tr');
+        const name = document.createElement('th');
+        name.scope = 'row';
+        name.textContent = learner.displayName;
+        const completed = document.createElement('td');
+        completed.textContent = `${learner.completedCount} / ${totalModules} days`;
+        const progressCell = document.createElement('td');
+        const percentage = Math.round(learner.completedCount / totalModules * 100);
+        const progress = document.createElement('progress');
+        progress.max = 100;
+        progress.value = percentage;
+        progress.setAttribute('aria-label', `${learner.displayName}: ${percentage}% complete`);
+        progressCell.append(progress, document.createTextNode(` ${percentage}%`));
+        const lastCompleted = document.createElement('td');
+        lastCompleted.textContent = learner.lastCompletedAt
+          ? new Date(learner.lastCompletedAt).toLocaleDateString()
+          : 'No days completed';
+        row.append(name, completed, progressCell, lastCompleted);
+        body.append(row);
+      });
+      table.append(caption, head, body);
+      tableWrap.append(table);
+
+      if (!validLearners.length) {
+        const empty = document.createElement('p');
+        empty.className = 'community-dashboard-status';
+        empty.textContent = 'No learner accounts are available yet.';
+        container.replaceChildren(metrics, empty);
+        return;
+      }
+
+      container.replaceChildren(metrics, tableWrap);
+    }
+
     async function renderLearningDashboard() {
       try {
         const { progress, activity, bookmarks, quizAttempts } = await window.learningAccount.loadLearningOverview();
@@ -471,37 +860,154 @@
           accumulator[`day-${index + 1}`] = `${day.day} · ${day.category}`;
           return accumulator;
         }, {});
+        const user = window.learningAccount.user;
+        const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Learner';
+        const initials = displayName.split(/[\s._-]+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'U';
+        const moduleCount = Object.keys(moduleNames).length || 36;
+        const completionPercent = Math.round(completedModules.size / moduleCount * 100);
+        const nextModuleId = Object.keys(moduleNames).find((moduleId) => !completedModules.has(moduleId));
+        const nextModuleName = nextModuleId ? moduleNames[nextModuleId] : 'All learning days completed';
+        const quizSummary = new Map();
+        quizAttempts.forEach((attempt) => {
+          const current = quizSummary.get(attempt.module_id) || {
+            bestRatio: -1,
+            bestScore: 0,
+            bestQuestionCount: attempt.question_count,
+            attempts: 0
+          };
+          const ratio = attempt.score / attempt.question_count;
+          if (ratio > current.bestRatio) {
+            current.bestRatio = ratio;
+            current.bestScore = attempt.score;
+            current.bestQuestionCount = attempt.question_count;
+          }
+          current.attempts += 1;
+          quizSummary.set(attempt.module_id, current);
+        });
+        const bestQuiz = [...quizSummary.values()].sort((left, right) => right.bestRatio - left.bestRatio)[0];
+        const weekCounts = Array.from({ length: Math.ceil(moduleCount / 6) }, (_, weekIndex) =>
+          Array.from({ length: 6 }, (unused, dayOffset) => `day-${weekIndex * 6 + dayOffset + 1}`)
+            .filter((moduleId) => moduleNames[moduleId] && completedModules.has(moduleId)).length
+        );
+        const maxWeekCount = Math.max(...weekCounts, 1);
         content.innerHTML = `
-          <div class="learning-dashboard-heading">
-            <p class="checkin-kicker">Your account</p>
-            <h1>My Learning</h1>
-            <p>${completedModules.size} of ${Object.keys(moduleNames).length} modules complete</p>
-          </div>
-          <section class="learning-profile" aria-labelledby="learning-profile-title">
-            <h2 id="learning-profile-title">Profile</h2>
-            <p class="learning-profile-name"></p>
-            <p class="learning-profile-email"></p>
-          </section>
-          <section class="learning-dashboard-section" aria-labelledby="learning-progress-title">
-            <h2 id="learning-progress-title">Module progress</h2>
-            <ul class="learning-progress-list"></ul>
-          </section>
-          <section class="learning-dashboard-section" aria-labelledby="learning-bookmarks-title">
-            <h2 id="learning-bookmarks-title">Saved for later</h2>
-            <ul class="learning-bookmark-list"></ul>
-          </section>
-          <section class="learning-dashboard-section" aria-labelledby="learning-quiz-title">
-            <h2 id="learning-quiz-title">Recent quiz scores</h2>
-            <ul class="learning-quiz-list"></ul>
-          </section>
-          <section class="learning-dashboard-section" aria-labelledby="learning-activity-title">
-            <h2 id="learning-activity-title">Recent activity</h2>
-            <ol class="learning-activity-list"></ol>
-          </section>`;
+          <div class="learning-dashboard">
+            <header class="learning-dashboard-welcome">
+              <div>
+                <p class="dashboard-eyebrow">LEARNING OVERVIEW</p>
+                <h1>Welcome back, <span class="dashboard-welcome-name"></span></h1>
+                <p class="dashboard-welcome-note">Your learning journey, progress, and saved resources in one place.</p>
+              </div>
+              <div class="dashboard-profile">
+                <span class="dashboard-profile-avatar" aria-hidden="true">
+                  <img class="dashboard-profile-photo" alt="" hidden>
+                  <span class="dashboard-profile-initials"></span>
+                </span>
+                <span class="dashboard-profile-details">
+                  <strong class="dashboard-profile-name"></strong>
+                  <small class="dashboard-profile-email"></small>
+                </span>
+              </div>
+            </header>
+            <section class="dashboard-stat-grid" aria-label="Your learning statistics">
+              <article class="dashboard-stat-card dashboard-completion-card">
+                <div class="dashboard-card-heading"><span>Overall progress</span><span class="dashboard-stat-icon" aria-hidden="true">↗</span></div>
+                <div class="dashboard-progress-summary">
+                  <div class="dashboard-progress-ring" role="img" aria-label="${completionPercent}% of learning days completed" style="--progress-percent:${completionPercent}%">
+                    <span>${completionPercent}%</span>
+                  </div>
+                  <div><strong>${completedModules.size} of ${moduleCount}</strong><small>learning days completed</small></div>
+                </div>
+              </article>
+              <article class="dashboard-stat-card">
+                <div class="dashboard-card-heading"><span>Saved for later</span><span class="dashboard-stat-icon" aria-hidden="true">☆</span></div>
+                <strong class="dashboard-stat-value">${bookmarks.length}</strong>
+                <small>learning resources</small>
+              </article>
+              <article class="dashboard-stat-card">
+                <div class="dashboard-card-heading"><span>Quiz practice</span><span class="dashboard-stat-icon" aria-hidden="true">✓</span></div>
+                <strong class="dashboard-stat-value">${quizSummary.size}</strong>
+                <small>${bestQuiz ? `Best score ${bestQuiz.bestScore}/${bestQuiz.bestQuestionCount}` : 'No quiz attempts yet'}</small>
+              </article>
+              <article class="dashboard-stat-card">
+                <div class="dashboard-card-heading"><span>Recent activity</span><span class="dashboard-stat-icon" aria-hidden="true">◷</span></div>
+                <strong class="dashboard-stat-value">${activity.length}</strong>
+                <small>recent learning visits</small>
+              </article>
+            </section>
+            <div class="dashboard-main-grid">
+              <section class="dashboard-panel dashboard-study-panel" aria-labelledby="dashboard-study-title">
+                <div class="dashboard-panel-heading">
+                  <div><p class="dashboard-eyebrow">YOUR JOURNEY</p><h2 id="dashboard-study-title">Study progress</h2></div>
+                  <span class="dashboard-panel-caption">36 learning days</span>
+                </div>
+                <div class="dashboard-week-chart" role="img" aria-label="Completed learning days grouped into six-week sections">
+                  ${weekCounts.map((count, index) => `
+                    <div class="dashboard-week-column">
+                      <span class="dashboard-week-count">${count}/6</span>
+                      <div class="dashboard-week-track"><span style="height:${count / maxWeekCount * 100}%"></span></div>
+                      <span class="dashboard-week-label">Week ${index + 1}</span>
+                    </div>`).join('')}
+                </div>
+                <div class="dashboard-chart-legend"><span><i></i> Days completed</span><span>${completionPercent}% overall</span></div>
+                <details class="dashboard-module-details">
+                  <summary>View all learning days</summary>
+                  <ul class="learning-progress-list"></ul>
+                </details>
+              </section>
+              <div class="dashboard-side-column">
+                <section class="dashboard-panel dashboard-continue-panel" aria-labelledby="dashboard-continue-title">
+                  <p class="dashboard-eyebrow">PICK UP WHERE YOU LEFT OFF</p>
+                  <h2 id="dashboard-continue-title">${nextModuleId ? 'Up next' : 'Journey complete!'}</h2>
+                  <p class="dashboard-next-module"></p>
+                  <a class="dashboard-continue-link" href="${nextModuleId ? `#${nextModuleId}` : '#stream-map'}">${nextModuleId ? 'Continue learning' : 'Review stream map'} <span aria-hidden="true">→</span></a>
+                </section>
+                <section class="dashboard-panel dashboard-bookmarks-panel" aria-labelledby="learning-bookmarks-title">
+                  <div class="dashboard-panel-heading"><h2 id="learning-bookmarks-title">Saved for later</h2><span class="dashboard-inline-count">${bookmarks.length}</span></div>
+                  <ul class="learning-bookmark-list"></ul>
+                </section>
+                <section class="dashboard-panel dashboard-activity-panel" aria-labelledby="learning-activity-title">
+                  <div class="dashboard-panel-heading"><h2 id="learning-activity-title">Recent activity</h2></div>
+                  <ol class="learning-activity-list"></ol>
+                </section>
+              </div>
+              <section class="dashboard-panel dashboard-quiz-panel" aria-labelledby="learning-quiz-title">
+                <div class="dashboard-panel-heading"><h2 id="learning-quiz-title">Quiz practice</h2></div>
+                <ul class="learning-quiz-list"></ul>
+              </section>
+            </div>
+            <section class="learning-dashboard-section community-dashboard" aria-labelledby="community-dashboard-title">
+              <div class="community-dashboard-heading">
+                <div>
+                  <p class="checkin-kicker">LEARNING COMMUNITY</p>
+                  <h2 id="community-dashboard-title">Learner progress dashboard</h2>
+                </div>
+                <button class="community-refresh-button" type="button">Refresh</button>
+              </div>
+              <p class="community-dashboard-intro">Signed-in learners can see each learner’s name, overall progress, and latest completion date. Day-by-day activity and lesson details are not shown.</p>
+              <div class="community-dashboard-results" aria-live="polite">
+                <p class="community-dashboard-status">Loading opted-in learner data...</p>
+              </div>
+            </section>
+          </div>`;
 
-          const user = window.learningAccount.user;
-          content.querySelector('.learning-profile-name').textContent = user?.user_metadata?.full_name || 'Name not provided';
-          content.querySelector('.learning-profile-email').textContent = user?.email || '';
+        content.classList.add('learning-dashboard-view');
+        content.querySelector('.dashboard-welcome-name').textContent = displayName;
+        content.querySelector('.dashboard-profile-name').textContent = displayName;
+        content.querySelector('.dashboard-profile-email').textContent = user?.email || '';
+        content.querySelector('.dashboard-profile-initials').textContent = initials;
+        content.querySelector('.dashboard-next-module').textContent = nextModuleName;
+        const dashboardPhoto = content.querySelector('.dashboard-profile-photo');
+        try {
+          const photo = user?.id ? localStorage.getItem(profilePhotoStorageKey(user.id)) : null;
+          if (photo) {
+            dashboardPhoto.src = photo;
+            dashboardPhoto.hidden = false;
+            content.querySelector('.dashboard-profile-initials').hidden = true;
+          }
+        } catch {
+          dashboardPhoto.hidden = true;
+        }
 
         const progressList = content.querySelector('.learning-progress-list');
         Object.entries(moduleNames).forEach(([moduleId, name]) => {
@@ -533,24 +1039,6 @@
         }
 
         const quizList = content.querySelector('.learning-quiz-list');
-        const quizSummary = new Map();
-        quizAttempts.forEach((attempt) => {
-          const current = quizSummary.get(attempt.module_id) || {
-            bestRatio: -1,
-            bestScore: 0,
-            bestQuestionCount: attempt.question_count,
-            attempts: 0
-          };
-          const ratio = attempt.score / attempt.question_count;
-          if (ratio > current.bestRatio) {
-            current.bestRatio = ratio;
-            current.bestScore = attempt.score;
-            current.bestQuestionCount = attempt.question_count;
-          }
-          current.attempts += 1;
-          quizSummary.set(attempt.module_id, current);
-        });
-
         if (!quizSummary.size) {
           const emptyState = document.createElement('li');
           emptyState.textContent = 'Your saved quiz scores will appear here.';
@@ -581,6 +1069,7 @@
             activityList.append(item);
           });
         }
+        await renderCommunityDashboard(content.querySelector('.community-dashboard'));
       } catch {
         content.innerHTML = '<h1>My Learning is unavailable</h1><p>Check that the account tables have been created in Supabase.</p>';
       }
@@ -592,6 +1081,18 @@
 
     window.addEventListener('learningauthchange', (event) => {
       const userId = event.detail.user?.id || null;
+      void refreshSidebarCompletionIndicators(userId);
+      if (!userId) {
+        profileMenu.hidden = true;
+        profileButton.setAttribute('aria-expanded', 'false');
+        setProfilePhoto('');
+      } else {
+        try {
+          setProfilePhoto(localStorage.getItem(profilePhotoStorageKey(userId)) || '');
+        } catch {
+          window.learningAccount.setAccountNotice('Profile photo could not be loaded from this browser.');
+        }
+      }
       if (userId) {
         if (userId === renderedAuthUserId) return;
         renderedAuthUserId = userId;
@@ -605,9 +1106,138 @@
     window.addEventListener('hashchange', renderPage);
     if (document.body.classList.contains('is-authenticated')) renderPage();
 
+    function closeSearch(returnFocus = false) {
+      searchPanel.hidden = true;
+      searchButton.setAttribute('aria-expanded', 'false');
+      if (returnFocus) searchButton.focus();
+    }
+
+    searchButton.addEventListener('click', () => {
+      const isOpen = searchButton.getAttribute('aria-expanded') === 'true';
+      if (isOpen) {
+        closeSearch();
+        return;
+      }
+      profileMenu.hidden = true;
+      profileButton.setAttribute('aria-expanded', 'false');
+      sidebar.classList.remove('is-open');
+      menuButton.setAttribute('aria-expanded', 'false');
+      searchPanel.hidden = false;
+      searchButton.setAttribute('aria-expanded', 'true');
+      void searchLearningContent();
+      searchInput.focus();
+    });
+
+    document.getElementById('close-search-button').addEventListener('click', () => closeSearch(true));
+    document.getElementById('content-search-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      void searchLearningContent();
+    });
+    searchInput.addEventListener('input', () => {
+      void searchLearningContent();
+    });
+    searchResults.addEventListener('click', (event) => {
+      if (event.target.closest('a')) closeSearch(true);
+    });
+
     menuButton.addEventListener('click', () => {
+      profileMenu.hidden = true;
+      profileButton.setAttribute('aria-expanded', 'false');
+      closeSearch();
       const isOpen = sidebar.classList.toggle('is-open');
       menuButton.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    profileButton.addEventListener('click', () => {
+      const isOpen = profileButton.getAttribute('aria-expanded') === 'true';
+      closeSearch();
+      profileMenu.hidden = isOpen;
+      profileButton.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    document.getElementById('change-profile-photo').addEventListener('click', () => {
+      profilePhotoInput.click();
+    });
+
+    profilePhotoInput.addEventListener('change', async () => {
+      const file = profilePhotoInput.files?.[0];
+      const userId = window.learningAccount.user?.id;
+      if (!file || !userId) return;
+
+      const notice = document.getElementById('account-notice');
+      notice.textContent = 'Preparing profile photo...';
+      try {
+        const photo = await resizeProfilePhoto(file);
+        localStorage.setItem(profilePhotoStorageKey(userId), photo);
+        setProfilePhoto(photo);
+        notice.textContent = 'Profile photo saved in this browser.';
+      } catch (error) {
+        notice.textContent = error.message || 'Profile photo could not be saved in this browser.';
+      } finally {
+        profilePhotoInput.value = '';
+      }
+    });
+
+    removeProfilePhotoButton.addEventListener('click', () => {
+      const userId = window.learningAccount.user?.id;
+      if (!userId) return;
+      try {
+        localStorage.removeItem(profilePhotoStorageKey(userId));
+        setProfilePhoto('');
+        document.getElementById('account-notice').textContent = 'Profile photo removed.';
+      } catch {
+        document.getElementById('account-notice').textContent = 'Profile photo could not be removed from this browser.';
+      }
+    });
+
+    profileNameForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const saveButton = profileNameForm.querySelector('button[type="submit"]');
+      saveButton.disabled = true;
+      document.getElementById('account-notice').textContent = 'Saving display name...';
+      try {
+        await window.learningAccount.updateProfileName(profileNameInput.value);
+        document.getElementById('account-notice').textContent = 'Display name updated.';
+      } catch (error) {
+        document.getElementById('account-notice').textContent = error.message || 'Display name could not be updated.';
+      } finally {
+        saveButton.disabled = false;
+      }
+    });
+
+    profileMenu.addEventListener('click', (event) => {
+      if (event.target.closest('a, #sign-out-button')) {
+        profileMenu.hidden = true;
+        profileButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!profileMenu.hidden && !profileMenu.contains(event.target) && !profileButton.contains(event.target)) {
+        profileMenu.hidden = true;
+        profileButton.setAttribute('aria-expanded', 'false');
+      }
+      if (!searchPanel.hidden && !searchPanel.contains(event.target) && !searchButton.contains(event.target)) {
+        closeSearch();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        if (searchPanel.hidden) searchButton.click();
+        else searchInput.focus();
+        return;
+      }
+      if (event.key === 'Escape' && !searchPanel.hidden) {
+        closeSearch(true);
+        return;
+      }
+      if (event.key === 'Escape' && !profileMenu.hidden) {
+        profileMenu.hidden = true;
+        profileButton.setAttribute('aria-expanded', 'false');
+        profileButton.focus();
+      }
     });
 
     sidebar.addEventListener('click', (event) => {

@@ -7,6 +7,10 @@
   const authStatus = document.getElementById('auth-status');
   const accountName = document.getElementById('account-name');
   const accountEmail = document.getElementById('account-email');
+  const profileButton = document.getElementById('profile-button');
+  const profileAvatarInitials = document.getElementById('profile-avatar');
+  const profileMenuAvatarInitials = document.getElementById('profile-menu-avatar');
+  const profileNameInput = document.getElementById('profile-name-input');
   const accountNotice = document.getElementById('account-notice');
   const signOutButton = document.getElementById('sign-out-button');
   const authForms = {
@@ -56,7 +60,18 @@
     accountName.textContent = currentUser?.user_metadata?.full_name || '';
     accountName.hidden = !accountName.textContent;
     accountEmail.textContent = currentUser?.email || '';
+    profileNameInput.value = accountName.textContent;
     signOutButton.hidden = !isSignedIn;
+    const profileLabel = accountName.textContent || accountEmail.textContent || 'User';
+    const initials = profileLabel
+      .split(/[\s@._-]+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0].toUpperCase())
+      .join('');
+    profileAvatarInitials.textContent = initials || 'U';
+    profileMenuAvatarInitials.textContent = initials || 'U';
+    profileButton.setAttribute('aria-label', `Open profile menu for ${profileLabel}`);
 
     if (isSignedIn) {
       void migrateLegacyProgress(currentUser.id);
@@ -206,6 +221,16 @@
     signOutButton.disabled = false;
   });
 
+  async function updateProfileName(fullName) {
+    if (!currentUser) throw new Error('Sign in to update your display name.');
+    const normalizedName = fullName.trim();
+    if (!normalizedName || normalizedName.length > 120) throw new Error('Enter a display name between 1 and 120 characters.');
+    const { error } = await client.auth.updateUser({
+      data: { ...currentUser.user_metadata, full_name: normalizedName }
+    });
+    if (error) throw error;
+  }
+
   async function getCompletion(moduleId) {
     const { data, error } = await client
       .from('user_module_progress')
@@ -215,6 +240,22 @@
       .maybeSingle();
     if (error) throw error;
     return Boolean(data);
+  }
+
+  async function loadCompletions() {
+    const { data, error } = await client
+      .from('user_module_progress')
+      .select('module_id')
+      .eq('user_id', currentUser.id);
+    if (error) throw error;
+    return new Set((data || []).map((record) => record.module_id));
+  }
+
+  async function loadLearnerProgressSummary() {
+    if (!currentUser) throw new Error('Sign in to view learner progress.');
+    const { data, error } = await client.rpc('get_learner_progress_summary');
+    if (error) throw error;
+    return data || [];
   }
 
   async function setCompletion(moduleId, isComplete) {
@@ -338,7 +379,10 @@
   window.learningAccount = {
     get user() { return currentUser; },
     getAccessToken() { return currentSession?.access_token || null; },
+    updateProfileName,
     getCompletion,
+    loadCompletions,
+    loadLearnerProgressSummary,
     setCompletion,
     recordVisit,
     loadBookmarks,
