@@ -12,3 +12,7 @@ Review the learning materials from the earlier days in the stream.
 ## Hands-on / Assessment
 
 Complete the practical exercise or assessment assigned for this day.
+
+## Practice Questions
+
+Use the PDF viewer below to review and work through the practice questions for this day.
