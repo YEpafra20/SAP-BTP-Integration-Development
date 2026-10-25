@@ -355,7 +355,7 @@
       '#day-13': { file: 'day-wise/day-13/content.md', title: 'Day 13: SAP Cloud Integration Security Aspects', imageDirectory: 'day-wise/day-13/images/', isModule: true, feedbackId: 'day-13' },
       '#day-14': { file: 'day-wise/day-14/content.md', title: 'Day 14: SAP Cloud Integration Monitoring and Transport Options', imageDirectory: 'day-wise/day-14/images/', isModule: true, feedbackId: 'day-14' },
       '#day-15': { file: 'day-wise/day-15/content.md', title: 'Day 15: SAP API Management Overview', imageDirectory: 'day-wise/day-15/images/', isModule: true, feedbackId: 'day-15' },
-      '#day-16': { file: 'day-wise/day-16/content.md', title: 'Day 16: Revision and Hands-on Assessment', imageDirectory: 'day-wise/day-16/images/', isModule: true, feedbackId: 'day-16' },
+      '#day-16': { file: 'day-wise/day-16/content.md', title: 'Day 16: Revision and Hands-on Assessment', imageDirectory: 'day-wise/day-16/images/', isModule: true, feedbackId: 'day-16', pdfResource: { title: 'Practice Questions', file: 'Practice Questions.docx - Google Docs.pdf', pageCount: 8 } },
       '#day-17': { file: 'day-wise/day-17/content.md', title: 'Day 17: MCQ 1 and SuccessFactors Connectivity', imageDirectory: 'day-wise/day-17/images/', isModule: true, feedbackId: 'day-17' },
       '#day-18': { file: 'day-wise/day-18/content.md', title: 'Day 18: AMQP Connectivity', imageDirectory: 'day-wise/day-18/images/', isModule: true, feedbackId: 'day-18' },
       '#day-19': { file: 'day-wise/day-19/content.md', title: 'Day 19: Open Connectors and Messaging', imageDirectory: 'day-wise/day-19/images/', isModule: true, feedbackId: 'day-19' },
@@ -656,14 +656,44 @@
       `;
     }
 
+    function renderPdfViewer(page) {
+      return `
+        <article class="pdf-viewer-shell" aria-label="${escapeHtml(page.title)} PDF viewer">
+          <div class="pdf-viewer-toolbar" aria-hidden="true">
+            <div class="pdf-toolbar-section pdf-toolbar-left">
+              <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Open file">▣</button>
+              <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Share">↗</button>
+              <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Download">↓</button>
+            </div>
+            <div class="pdf-toolbar-center">
+              <span class="pdf-toolbar-label">Page Count:</span>
+              <span class="pdf-toolbar-counter">1</span>
+              <span class="pdf-toolbar-divider">of ${page.pageCount || 51}</span>
+              <button class="pdf-toolbar-button pdf-toolbar-small" type="button" aria-label="Zoom out">−</button>
+              <button class="pdf-toolbar-button pdf-toolbar-small" type="button" aria-label="Zoom in">+</button>
+              <span class="pdf-toolbar-label">Page Width</span>
+              <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Fit to page">⌂</button>
+              <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Open in new window">↗</button>
+            </div>
+          </div>
+          <div class="pdf-viewer-surface">
+            <iframe class="pdf-viewer-frame" src="${escapeHtml(encodeURI(page.file))}" title="${escapeHtml(page.title)}"></iframe>
+          </div>
+        </article>
+      `;
+    }
+
     async function addModuleCheckIn(page, route) {
       if (!page.isModule) return;
 
       const moduleId = page.feedbackId || route.slice(1);
       const moduleContent = content.querySelector('.day-content-frame') || content;
-      const quiz = document.createElement('section');
-      window.initializeModuleQuiz(quiz, moduleId);
-      moduleContent.append(quiz);
+      const dayNumber = Number(moduleId.match(/^day-(\d+)$/)?.[1]);
+      if (!(dayNumber >= 16 && dayNumber <= 36)) {
+        const quiz = document.createElement('section');
+        window.initializeModuleQuiz(quiz, moduleId);
+        moduleContent.append(quiz);
+      }
 
       const checkIn = document.createElement('section');
       checkIn.className = 'module-checkin';
@@ -803,30 +833,7 @@
         }
 
         if (page.isPdfViewer) {
-          content.innerHTML = `
-            <article class="pdf-viewer-shell" aria-label="${escapeHtml(page.title)} PDF viewer">
-              <div class="pdf-viewer-toolbar" aria-hidden="true">
-                <div class="pdf-toolbar-section pdf-toolbar-left">
-                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Open file">▣</button>
-                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Share">↗</button>
-                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Download">↓</button>
-                </div>
-                <div class="pdf-toolbar-center">
-                  <span class="pdf-toolbar-label">Page Count:</span>
-                  <span class="pdf-toolbar-counter">1</span>
-                  <span class="pdf-toolbar-divider">of 51</span>
-                  <button class="pdf-toolbar-button pdf-toolbar-small" type="button" aria-label="Zoom out">−</button>
-                  <button class="pdf-toolbar-button pdf-toolbar-small" type="button" aria-label="Zoom in">+</button>
-                  <span class="pdf-toolbar-label">Page Width</span>
-                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Fit to page">⌂</button>
-                  <button class="pdf-toolbar-button pdf-toolbar-icon" type="button" aria-label="Open in new window">↗</button>
-                </div>
-              </div>
-              <div class="pdf-viewer-surface">
-                <iframe class="pdf-viewer-frame" src="${page.file}" title="${escapeHtml(page.title)}"></iframe>
-              </div>
-            </article>
-          `;
+          content.innerHTML = renderPdfViewer(page);
           window.scrollTo(0, 0);
           return;
         }
@@ -852,6 +859,15 @@
         content.innerHTML = page.isModule
           ? `<div class="day-content-frame">${pageContent}</div>`
           : pageContent;
+        if (page.pdfResource) {
+          content.querySelector('.day-content-frame').insertAdjacentHTML(
+            'beforeend',
+            `<section class="day-practice-resource" aria-labelledby="day-practice-resource-title">
+              <h2 id="day-practice-resource-title">${escapeHtml(page.pdfResource.title)}</h2>
+              ${renderPdfViewer(page.pdfResource)}
+            </section>`
+          );
+        }
         if (page.isModule) {
           window.learningAccount.recordVisit(page.feedbackId || route.slice(1))
             .catch(() => window.learningAccount.setAccountNotice('Recent activity could not be saved.'));
