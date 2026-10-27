@@ -3,7 +3,7 @@
   const supabaseUrl = (config.supabaseUrl || '').replace(/\/+$/, '');
   const supabaseAnonKey = config.supabaseAnonKey || '';
   const authGate = document.getElementById('auth-gate');
-  const authTitle = document.getElementById('auth-title');
+  const authTitle = document.getElementById('auth-form-title');
   const authStatus = document.getElementById('auth-status');
   const accountName = document.getElementById('account-name');
   const accountEmail = document.getElementById('account-email');
@@ -32,7 +32,7 @@
   if (passwordRecoveryPending) setAuthMode('update');
 
   const authModes = {
-    signIn: 'Sign in to continue learning',
+    signIn: 'Sign in using your existing account.',
     signUp: 'Create your learning account',
     accessRequest: 'Request account access',
     reset: 'Reset your password',
@@ -213,7 +213,6 @@
   document.getElementById('show-reset').addEventListener('click', () => setAuthMode('reset'));
   document.getElementById('cancel-reset').addEventListener('click', () => setAuthMode('signIn'));
   document.getElementById('cancel-update').addEventListener('click', () => setAuthMode('signIn'));
-
   signOutButton.addEventListener('click', async () => {
     signOutButton.disabled = true;
     const { error } = await client.auth.signOut();
