@@ -1258,13 +1258,13 @@ body[data-theme='dark'] .day-content-frame {
 .content img {
   display: block;
   width: 100%;
-  min-height: 150px;
+  height: auto;
+  min-height: 0;
   margin: 22px 0 8px;
-  padding: 24px;
-  border: 2px dashed #9cb3c1;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #f8fbfd, #eef7fc);
-  object-fit: contain;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .content img:not([src*='data:']) { color: var(--muted); }
