@@ -5,27 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAP BTP Integration Development</title>
   <link rel="icon" type="image/png" href="sap.png">
-  <link rel="stylesheet" href="styles.css?v=dashboard-color-refresh-20261023">
+  <link rel="stylesheet" href="styles.css?v=login-rising-flames-20261027">
 </head>
 <body>
   <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
-    <div class="auth-scene" aria-hidden="true">
-      <span class="auth-blob auth-blob--one"></span>
-      <span class="auth-blob auth-blob--two"></span>
-      <span class="auth-blob auth-blob--three"></span>
-      <span class="auth-blob auth-blob--four"></span>
-      <span class="auth-blob auth-blob--five"></span>
-      <span class="auth-blob auth-blob--six"></span>
-      <span class="auth-blob auth-blob--seven"></span>
-    </div>
-    <div class="auth-panel">
-      <p class="welcome-label">SAP BTP Integration Development</p>
+    <div id="auth-effect-layer" class="auth-effect-layer" aria-hidden="true"></div>
+    <header class="auth-brand-bar">
+      <a class="auth-brand" href="#my-learning" aria-label="SAP BTP Integration Development home">
+        <span class="auth-brand-mark">SAP BTP</span>
+        <span class="auth-brand-chevron" aria-hidden="true">&gt;</span>
+        <span class="auth-brand-name">Integration Development</span>
+      </a>
+    </header>
+    <main class="auth-panel">
       <h1 id="auth-title">Sign in to continue learning</h1>
+      <p class="auth-description">Access your learning modules, track your progress, and continue building your SAP skills.</p>
+      <div class="auth-form-shell">
+      <h2 id="auth-form-title">Sign in using your existing account.</h2>
       <form id="sign-in-form" class="auth-form">
-        <label for="signin-email">Email</label>
-        <input id="signin-email" name="email" type="email" autocomplete="email" required>
-        <label for="signin-password">Password</label>
-        <input id="signin-password" name="password" type="password" autocomplete="current-password" required>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" aria-describedby="signin-validation-error" required>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" aria-describedby="signin-validation-error" required>
+        <label class="auth-checkbox-label" for="show-signin-password">
+          <input id="show-signin-password" type="checkbox">
+          Show password
+        </label>
+        <p id="signin-validation-error" class="auth-validation-error" role="alert" hidden></p>
         <button class="auth-submit" type="submit">Sign in</button>
         <button class="auth-link" id="show-signup" type="button">Create an account</button>
         <button class="auth-link" id="show-reset" type="button">Forgot password?</button>
@@ -66,7 +72,8 @@
         <button class="auth-link" id="cancel-update" type="button">Cancel</button>
       </form>
       <p id="auth-status" class="auth-status" aria-live="polite">Checking your account...</p>
-    </div>
+      </div>
+    </main>
   </section>
   <div class="site-shell">
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -203,10 +210,10 @@
       <table class="assessment-table">
         <thead><tr><th scope="col">Assessment Type</th><th scope="col">Exam Type</th><th scope="col">Schedule</th></tr></thead>
         <tbody>
-          <tr><td>MCQ</td><td>MCQ 1</td><td>26 Oct 2026 · 09:30 AM–11:00 AM</td></tr>
-          <tr><td>MCQ</td><td>MCQ 2</td><td>13 Nov 2026 · 01:30 PM–03:00 PM</td></tr>
-          <tr><td>HON</td><td>HON</td><td>16 Nov 2026 · 01:30 PM–04:30 PM</td></tr>
-          <tr><td>Capstone</td><td>Capstone</td><td>17 Nov 2026, 09:00 AM–23 Nov 2026, 06:00 PM</td></tr>
+          <tr data-reminder-id="mcq-1" data-reminder-date="2026-10-26"><td>MCQ</td><td>MCQ 1</td><td>26 Oct 2026 · 09:30 AM–11:00 AM</td></tr>
+          <tr data-reminder-id="mcq-2" data-reminder-date="2026-11-13"><td>MCQ</td><td>MCQ 2</td><td>13 Nov 2026 · 01:30 PM–03:00 PM</td></tr>
+          <tr data-reminder-id="hon" data-reminder-date="2026-11-16"><td>HON</td><td>HON</td><td>16 Nov 2026 · 01:30 PM–04:30 PM</td></tr>
+          <tr data-reminder-id="capstone" data-reminder-date="2026-11-17"><td>Capstone</td><td>Capstone</td><td>17 Nov 2026, 09:00 AM–23 Nov 2026, 06:00 PM</td></tr>
         </tbody>
       </table>
     </div>
@@ -225,7 +232,7 @@
       <button class="agree-button" type="button">Agree and continue</button>
     </section>
   </div>
-  <div class="assessment-overlay" role="dialog" aria-modal="true" aria-labelledby="assessment-popup-title">
+  <div class="assessment-overlay is-dismissed" role="dialog" aria-modal="true" aria-labelledby="assessment-popup-title">
     <section class="assessment-dialog">
       <button class="assessment-close" type="button" aria-label="Close assessment schedule" title="Close">
         <span aria-hidden="true">&times;</span>
@@ -239,9 +246,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="feedback.js"></script>
   <script src="learning-account.js?v=learner-status-summary-20261023"></script>
+  <script src="login.js"></script>
   <script src="module-quizzes.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="stream-map.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.4.3/dist/pixi.min.js"></script>
+  <script src="effect.js"></script>
   <script>
     const content = document.getElementById('main-content');
     const topbar = document.querySelector('.topbar');
@@ -274,6 +284,8 @@
     const themeToggle = document.getElementById('theme-toggle');
     const assessmentScheduleTemplate = document.getElementById('assessment-schedule-template');
     document.querySelector('.assessment-popup-schedule').append(assessmentScheduleTemplate.content.cloneNode(true));
+    const shownAssessmentReminders = new Map();
+    const welcomeShownWeeks = new Map();
 
     function applyTheme(theme) {
       const isDark = theme === 'dark';
@@ -345,7 +357,7 @@
       '#day-3': { file: 'day-wise/day-3/content.md', title: 'Day 3: Learning Resources', imageDirectory: 'day-wise/day-3/images/', isModule: true, feedbackId: 'day-3' },
       '#day-4': { file: 'day-wise/day-4/content.md', title: 'Day 4: Message Protocols', imageDirectory: 'day-wise/day-4/images/', isModule: true, feedbackId: 'day-4' },
       '#day-5': { file: 'day-wise/day-5/content.md', title: 'Day 5: Introduction to SAP BTP', imageDirectory: 'day-wise/day-5/images/', isModule: true, feedbackId: 'day-5' },
-      '#day-6': { title: 'Day 6 · Agentic AI', isModule: true, feedbackId: 'day-6', isGenerated: true },
+      '#day-6': { file: 'day-wise/day-6/content.md', title: 'Day 6: Agentic AI Deep Dive', imageDirectory: 'day-wise/day-6/images/', isModule: true, feedbackId: 'day-6' },
       '#day-7': { file: 'day-wise/day-7/content.md', title: 'Day 7: Introduction to SAP Integration Suite', imageDirectory: 'day-wise/day-7/images/', isModule: true, feedbackId: 'day-7' },
       '#day-8': { file: 'day-wise/day-8/content.md', title: 'Day 8: SAP Cloud Integration Overview', imageDirectory: 'day-wise/day-8/images/', isModule: true, feedbackId: 'day-8' },
       '#day-9': { file: 'day-wise/day-9/content.md', title: 'Day 9: SAP Cloud Integration Tools and Basic Concepts', imageDirectory: 'day-wise/day-9/images/', isModule: true, feedbackId: 'day-9' },
@@ -1241,10 +1253,13 @@
       const userId = event.detail.user?.id || null;
       void refreshSidebarCompletionIndicators(userId);
       if (!userId) {
+        welcomeOverlay.classList.add('is-dismissed');
+        assessmentOverlay.classList.add('is-dismissed');
         profileMenu.hidden = true;
         profileButton.setAttribute('aria-expanded', 'false');
         setProfilePhoto('');
       } else {
+        showPostLoginMessages();
         try {
           setProfilePhoto(localStorage.getItem(profilePhotoStorageKey(userId)) || '');
         } catch {
@@ -1262,7 +1277,10 @@
       syncPageScrollLock();
     });
     window.addEventListener('hashchange', renderPage);
-    if (document.body.classList.contains('is-authenticated')) renderPage();
+    if (document.body.classList.contains('is-authenticated')) {
+      showPostLoginMessages();
+      renderPage();
+    }
 
     function closeSearch(returnFocus = false) {
       searchPanel.hidden = true;
@@ -1412,13 +1430,92 @@
 
     function dismissAssessmentPopup() {
       assessmentOverlay.classList.add('is-dismissed');
-      welcomeOverlay.classList.remove('is-dismissed');
+      syncPageScrollLock();
+    }
+
+    function showPostLoginMessages() {
+      const userId = window.learningAccount.user?.id;
+      if (!document.body.classList.contains('is-authenticated') || !userId) return;
+      if (!welcomeOverlay.classList.contains('is-dismissed')
+        || !assessmentOverlay.classList.contains('is-dismissed')) return;
+
+      const today = new Date();
+      const todayUtc = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+      const monday = new Date(today);
+      monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+      const weekKey = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`;
+      const welcomeKey = `sap-btp-welcome-week:${userId}`;
+      const reminderKey = `sap-btp-assessment-reminders:${userId}`;
+      const shownReminders = new Set(shownAssessmentReminders.get(userId) || []);
+      try {
+        const savedReminders = JSON.parse(localStorage.getItem(reminderKey) || '[]');
+        if (Array.isArray(savedReminders)) savedReminders.forEach((reminder) => shownReminders.add(reminder));
+      } catch (error) {
+        console.error('Assessment reminder history could not be read.', error);
+      }
+
+      const upcomingReminders = Array.from(assessmentScheduleTemplate.content.querySelectorAll('[data-reminder-id][data-reminder-date]'))
+        .filter((row) => {
+          const [year, month, day] = row.dataset.reminderDate.split('-').map(Number);
+          const reminderDateUtc = Date.UTC(year, month - 1, day);
+          const daysUntil = Math.round((reminderDateUtc - todayUtc) / 86400000);
+          return daysUntil >= 0 && daysUntil <= 7 && !shownReminders.has(row.dataset.reminderId);
+        })
+        .map((row) => row.dataset.reminderId);
+
+      if (upcomingReminders.length) {
+        const userReminders = shownAssessmentReminders.get(userId) || new Set();
+        upcomingReminders.forEach((reminder) => {
+          shownReminders.add(reminder);
+          userReminders.add(reminder);
+        });
+        shownAssessmentReminders.set(userId, userReminders);
+        try {
+          localStorage.setItem(reminderKey, JSON.stringify(Array.from(shownReminders)));
+        } catch (error) {
+          console.error('Assessment reminder history could not be saved.', error);
+        }
+        welcomeShownWeeks.set(userId, weekKey);
+        try {
+          localStorage.setItem(welcomeKey, weekKey);
+        } catch (error) {
+          console.error('Weekly message history could not be saved.', error);
+        }
+        document.querySelectorAll('.assessment-popup-schedule [data-reminder-id]').forEach((row) => {
+          row.hidden = !upcomingReminders.includes(row.dataset.reminderId);
+        });
+        welcomeOverlay.classList.add('is-dismissed');
+        assessmentOverlay.classList.remove('is-dismissed');
+        syncPageScrollLock();
+        return;
+      }
+
+      assessmentOverlay.classList.add('is-dismissed');
+      let shownWeek = welcomeShownWeeks.get(userId) || null;
+      try {
+        shownWeek = localStorage.getItem(welcomeKey) || shownWeek;
+      } catch (error) {
+        console.error('Welcome message history could not be read.', error);
+      }
+
+      if (shownWeek !== weekKey) {
+        welcomeShownWeeks.set(userId, weekKey);
+        try {
+          localStorage.setItem(welcomeKey, weekKey);
+        } catch (error) {
+          console.error('Welcome message history could not be saved.', error);
+        }
+        welcomeOverlay.classList.remove('is-dismissed');
+      } else {
+        welcomeOverlay.classList.add('is-dismissed');
+      }
       syncPageScrollLock();
     }
 
     function syncPageScrollLock() {
-      const assessmentIsOpen = !assessmentOverlay.classList.contains('is-dismissed');
-      const welcomeIsOpen = !welcomeOverlay.classList.contains('is-dismissed');
+      const isAuthenticated = document.body.classList.contains('is-authenticated');
+      const assessmentIsOpen = isAuthenticated && !assessmentOverlay.classList.contains('is-dismissed');
+      const welcomeIsOpen = isAuthenticated && !welcomeOverlay.classList.contains('is-dismissed');
       document.body.classList.toggle('welcome-locked', assessmentIsOpen || welcomeIsOpen);
     }
 
